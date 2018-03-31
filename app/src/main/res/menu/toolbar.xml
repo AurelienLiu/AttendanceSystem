@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/toolbar_add"
+        android:icon="@drawable/add"
+        android:title="add"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/toolbar_order_by_id"
+        android:title="按工号排序"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/toolbar_order_by_dep"
+        android:title="按部门排序"
+        app:showAsAction="never"/>
+
+
+</menu>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/attendance_record"
+            android:icon="@drawable/record"
+            android:title="考勤记录"/>
+        <item
+            android:id="@+id/people_management"
+            android:title="人员管理"
+            android:icon="@drawable/people_management"/>
+    </group>
+
+    <group
+        android:id="@+id/grp2"
+        android:checkableBehavior="single"
+        android:menuCategory="system">
+        <item
+            android:id="@+id/about_us"
+            android:icon="@drawable/about"
+            android:title="关于我们" />
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/setting"
+            android:title="设置" />
+    </group>
+
+</menu>
