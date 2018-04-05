@@ -1,11 +1,10 @@
-package com.example.liuxuanchi.project;
+package com.example.liuxuanchi.project.peopleManagement;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -19,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ToolbarWidgetWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,8 +27,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
+import com.example.liuxuanchi.project.R;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;

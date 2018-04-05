@@ -14,17 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PeopleManagement"
+            android:name=".peopleManagement.PeopleManagement"
             android:label="人员管理">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".PeopleInformation" />
-        <activity android:name=".PeopleEdit"
+            android:name=".peopleManagement.PeopleInformation" />
+        <activity android:name=".peopleManagement.PeopleEdit"
             android:label="信息编辑"></activity>
         <provider
             android:authorities="com.example.liuxuanchi.project.fileprovider"
@@ -36,6 +31,23 @@
                 android:resource="@xml/file_paths"/>
         </provider>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+
+        <activity android:name=".login.MainActivity" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:label="登录">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login.RegisterActivity"
+            android:label="注册" />
+        <activity
+            android:name=".login.ForgetPassActivity"
+            android:label="忘记密码"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project;
+package com.example.liuxuanchi.project.peopleManagement;
 
 /**
  * Created by liuxuanchi on 2017/12/23.

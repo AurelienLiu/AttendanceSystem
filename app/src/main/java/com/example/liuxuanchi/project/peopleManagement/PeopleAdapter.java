@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project;
+package com.example.liuxuanchi.project.peopleManagement;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.liuxuanchi.project.R;
 
 import java.util.List;
 

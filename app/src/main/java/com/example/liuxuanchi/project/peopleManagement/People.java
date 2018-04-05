@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project;
+package com.example.liuxuanchi.project.peopleManagement;
 
 import android.graphics.Bitmap;
 

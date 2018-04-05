@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project;
+package com.example.liuxuanchi.project.peopleManagement;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.liuxuanchi.project.R;
 
 /**
  * Created by liuxuanchi on 2018/3/1.

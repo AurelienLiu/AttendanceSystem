@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project;
+package com.example.liuxuanchi.project.peopleManagement;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.peopleManagement.AttendanceInfo;
 
 import java.util.List;
 
