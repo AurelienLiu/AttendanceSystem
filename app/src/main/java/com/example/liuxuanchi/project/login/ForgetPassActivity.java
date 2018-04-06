@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.User;
 
 public class ForgetPassActivity extends AppCompatActivity {
 

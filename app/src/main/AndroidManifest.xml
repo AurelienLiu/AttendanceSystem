@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -38,7 +39,6 @@
             android:label="登录">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,6 +48,10 @@
         <activity
             android:name=".login.ForgetPassActivity"
             android:label="忘记密码"/>
+        <activity
+            android:name=".statistics.statistics.StatisticsActivity"
+            android:label="数据统计">
+        </activity>
     </application>
 
 </manifest>

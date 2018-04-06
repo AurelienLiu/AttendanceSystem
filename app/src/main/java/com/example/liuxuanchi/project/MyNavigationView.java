@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project.peopleManagement;
+package com.example.liuxuanchi.project;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
+import com.example.liuxuanchi.project.statistics.statistics.StatisticsActivity;
 
 /**
  * Created by liuxuanchi on 2018/3/1.
@@ -38,6 +40,10 @@ public class MyNavigationView extends NavigationView {
                     case R.id.attendance_record:
                         Toast.makeText(context, "跳转到考勤记录界面", Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawers();
+                        if (context.getClass() != StatisticsActivity.class) {
+                            Intent intent = new Intent(context, StatisticsActivity.class);
+                            context.startActivity(intent);
+                        }
                         break;
                     case R.id.people_management:
                         mDrawerLayout.closeDrawers();

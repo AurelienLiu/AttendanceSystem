@@ -5,14 +5,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.People;
 
 import java.util.List;
 
@@ -52,29 +58,36 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                 int position = holder.getAdapterPosition();
                 final People people = myPeopleList.get(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(parent.getContext());
-                builder.setTitle(people.getName());
-
-                builder.setNeutralButton("查看", new DialogInterface.OnClickListener() {
+                final AlertDialog dialog = builder.create();
+                final View dialogView = View.inflate(parent.getContext(), R.layout.dialog_layout, null);
+                dialog.setView(dialogView);
+                final TextView nameView = (TextView)dialogView.findViewById(R.id.dialog_name);
+                final Button checkButton = (Button)dialogView.findViewById(R.id.dialog_check);
+                final Button editButton = (Button)dialogView.findViewById(R.id.dialog_edit);
+                final Button deleteButton = (Button)dialogView.findViewById(R.id.dialog_delete);
+                nameView.setText(people.getName());
+                checkButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(parent.getContext(), "进入查看页面", Toast.LENGTH_SHORT).show();
+                    public void onClick(View v) {
                         Intent intent = new Intent(parent.getContext(), PeopleInformation.class);
                         putInfoToIntent(intent, people);
                         parent.getContext().startActivity(intent);
+                        dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("编辑", new DialogInterface.OnClickListener() {
+                editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(parent.getContext(), "进入编辑页面", Toast.LENGTH_SHORT).show();
+                    public void onClick(View v) {
                         Intent intent = new Intent(parent.getContext(), PeopleEdit.class);
                         putInfoToIntent(intent, people);
                         parent.getContext().startActivity(intent);
+                        dialog.dismiss();
                     }
                 });
-                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
+                        dialog.dismiss();
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(parent.getContext());
                         builder1.setTitle("确认删除");
                         builder1.setCancelable(false);
@@ -88,15 +101,65 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                         });
                         builder1.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
+                            public void onClick(DialogInterface dialog, int which) {}
                         });
                         builder1.show();
+                        Window dialogWindow = dialog.getWindow();
+                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                        DisplayMetrics d = parent.getContext().getResources().getDisplayMetrics(); // 获取屏幕宽、高用
+                        lp.width = 350; // 宽度设置为屏幕的0.8
+                        lp.height = 150;
+                        dialogWindow.setAttributes(lp);
                     }
                 });
-                builder.setCancelable(true);
-                builder.show();
+                dialog.setCancelable(true);
+                dialog.show();
+
+//                builder.setTitle(people.getName());
+//
+//                builder.setNeutralButton("查看", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(parent.getContext(), "进入查看页面", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(parent.getContext(), PeopleInformation.class);
+//                        putInfoToIntent(intent, people);
+//                        parent.getContext().startActivity(intent);
+//                    }
+//                });
+//                builder.setNegativeButton("编辑", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(parent.getContext(), "进入编辑页面", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(parent.getContext(), PeopleEdit.class);
+//                        putInfoToIntent(intent, people);
+//                        parent.getContext().startActivity(intent);
+//                    }
+//                });
+//                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        AlertDialog.Builder builder1 = new AlertDialog.Builder(parent.getContext());
+//                        builder1.setTitle("确认删除");
+//                        builder1.setCancelable(false);
+//                        builder1.setPositiveButton("确认删除", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                people.delete();
+//                                Intent intent = new Intent(parent.getContext(), PeopleManagement.class);
+//                                parent.getContext().startActivity(intent);
+//                            }
+//                        });
+//                        builder1.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//
+//                            }
+//                        });
+//                        builder1.show();
+//                    }
+//                });
+//                builder.setCancelable(true);
+//                builder.show();
 
             }
         });

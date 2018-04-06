@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout_sta"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_sta"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:id="@+id/spread_pie_chart"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="90dp">
+            </com.github.mikephil.charting.charts.PieChart>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_width="400dp"
+                android:layout_height="270dp"
+                android:id="@+id/spread_bar_chart"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/spread_pie_chart">
+            </com.github.mikephil.charting.charts.BarChart>
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/statistics_blue"
+                android:layout_toRightOf="@id/spread_pie_chart"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="280dp"
+                android:id="@+id/statistics_blue"
+                android:elevation="4dp"
+                android:background="@android:color/white"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/statistics_green"
+                android:layout_alignLeft="@id/statistics_blue"
+                android:layout_below="@id/statistics_blue"
+                android:layout_marginTop="10dp"
+                android:id="@+id/statistics_green"
+                android:elevation="4dp"
+                android:background="@android:color/white"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/statistics_gray"
+                android:src="@drawable/statistics_gray"
+                android:layout_alignLeft="@id/statistics_blue"
+                android:layout_below="@id/statistics_green"
+                android:layout_marginTop="10dp"
+                android:elevation="4dp"
+                android:background="@android:color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/blue_text"
+                android:text="按时"
+                android:layout_toRightOf="@id/statistics_blue"
+                android:layout_alignBottom="@id/statistics_blue"
+                android:layout_marginLeft="10dp"
+                android:textSize="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/green_text"
+                android:text="迟到"
+                android:layout_toRightOf="@id/statistics_green"
+                android:layout_alignBottom="@id/statistics_green"
+                android:layout_marginLeft="10dp"
+                android:textSize="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/gray_text"
+                android:text="缺席"
+                android:layout_toRightOf="@id/statistics_gray"
+                android:layout_alignBottom="@id/statistics_gray"
+                android:layout_marginLeft="10dp"
+                android:textSize="20dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/zhuangzhou"
+                android:layout_below="@id/spread_pie_chart"
+                android:layout_marginTop="30dp"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/desciption"
+                android:text="迟到/缺席"
+                android:textSize="18dp"
+                android:layout_marginTop="700dp"
+                android:layout_marginLeft="30dp"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="700dp"
+                android:src="@drawable/ic_timer_off_24px"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="175dp"
+                android:layout_marginTop="700dp"
+                android:src="@drawable/ic_access_time_24px"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/arriveTime"
+                android:text="签到时间"
+                android:layout_alignBottom="@id/desciption"
+                android:layout_marginLeft="200dp"
+                android:textSize="18dp"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:layout_marginTop="720dp"
+                 />
+
+
+
+
+
+        </RelativeLayout>
+
+
+
+
+    </ScrollView>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/nav_header"/>
+</android.support.v4.widget.DrawerLayout>

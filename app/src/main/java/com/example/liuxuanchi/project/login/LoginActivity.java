@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.User;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 
 import org.litepal.crud.DataSupport;
