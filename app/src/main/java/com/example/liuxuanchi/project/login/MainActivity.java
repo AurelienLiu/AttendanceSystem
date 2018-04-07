@@ -11,7 +11,7 @@ import com.example.liuxuanchi.project.R;
 import org.litepal.tablemanager.Connector;
 
 public class MainActivity extends BaseActivity {
-
+    //gaibian
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
