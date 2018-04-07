@@ -1,7 +1,10 @@
 package com.example.liuxuanchi.project.peopleManagement;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,11 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.People;
 
 import org.litepal.crud.DataSupport;
 
@@ -29,6 +36,8 @@ public class PeopleManagement extends AppCompatActivity {
     private static final int ORDER_BY_ID = 0;
     private static final int ORDER_BY_DEP = 1;
     private int orderWay;
+    private PeopleAdapter adapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,22 +86,22 @@ public class PeopleManagement extends AppCompatActivity {
 
 
         //设置Recycler view
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        PeopleAdapter adapter = new PeopleAdapter(myList);
+        adapter = new PeopleAdapter(myList);
         recyclerView.setAdapter(adapter);
 
         //添加按钮
-//        Button buttonAdd = (Button)findViewById(R.id.button_add);
-//        buttonAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(PeopleManagement.this, PeopleEdit.class);
-//                intent.putExtra("for_add", true);
-//                startActivity(intent);
-//            }
-//        });
+        FloatingActionButton addButton = (FloatingActionButton)findViewById(R.id.mangement_add);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PeopleManagement.this, PeopleEdit.class);
+                intent.putExtra("for_add", true);
+                startActivity(intent);
+            }
+        });
 
         //设置navigationView的点击事件
         NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
@@ -106,6 +115,31 @@ public class PeopleManagement extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
+        final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView)menu.findItem(R.id.toolbar_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String queryText = searchView.getQuery().toString();
+                if ("".equals(queryText)) {
+                    myList = DataSupport.findAll(People.class);
+                } else {
+                    myList.clear();
+                    myList = DataSupport.where("name like ?", "%" + queryText + "%").find(People.class);
+                }
+                adapter = new PeopleAdapter(myList);
+                recyclerView.setAdapter(adapter);
+                return false;
+            }
+
+        });
+
         return true;
     }
     //设置toolbar菜单中的点击事件
@@ -115,11 +149,6 @@ public class PeopleManagement extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                break;
-            case R.id.toolbar_add:
-                Intent intent = new Intent(PeopleManagement.this, PeopleEdit.class);
-                intent.putExtra("for_add", true);
-                startActivity(intent);
                 break;
             case R.id.toolbar_order_by_id:
                 if (orderWay == ORDER_BY_DEP) {

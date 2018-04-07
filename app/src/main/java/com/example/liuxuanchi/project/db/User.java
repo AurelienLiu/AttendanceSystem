@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project.login;
+package com.example.liuxuanchi.project.db;
 
 
 import org.litepal.crud.DataSupport;

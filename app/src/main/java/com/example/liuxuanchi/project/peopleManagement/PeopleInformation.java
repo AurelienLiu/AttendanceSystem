@@ -1,6 +1,7 @@
 package com.example.liuxuanchi.project.peopleManagement;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -16,16 +17,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.AttendanceInfo;
+import com.example.liuxuanchi.project.util.HttpUtil;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class PeopleInformation extends AppCompatActivity {
 
@@ -33,6 +45,7 @@ public class PeopleInformation extends AppCompatActivity {
     public static String phoneNumber;
     private DrawerLayout mDrawerLayout;
     private List<AttendanceInfo> infoList;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +59,8 @@ public class PeopleInformation extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(intent.getStringExtra("data_name"));
+        String name = intent.getStringExtra("data_name");
+        collapsingToolbarLayout.setTitle(name);
 
         //设置DrawerLayout
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -96,6 +110,10 @@ public class PeopleInformation extends AppCompatActivity {
         navView.setCheckedItem(R.id.people_management);
         MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
+        //自动更新该人员签到历史信息
+        String address = "http://10.0.2.2/fahuichu.json";
+        queryFromServer(address);
+
 
         //将考勤信息填入attendance content里面
 //        StringBuilder builder = new StringBuilder();
@@ -108,17 +126,70 @@ public class PeopleInformation extends AppCompatActivity {
 //        attendanceContent.setText(content);
 
         infoList = new ArrayList<>();
-        initInfoList();
+        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
+        //initInfoList(name);
         AttendanceInfoAdapter adapter = new AttendanceInfoAdapter(PeopleInformation.this,
                 R.layout.attendance_info_item, infoList);
         MyListView attendacneList = (MyListView)findViewById(R.id.attendance_list);
         attendacneList.setAdapter(adapter);
-
-
     }
 
-    private void initInfoList() {
+    private void queryFromServer(String address) {
+        showProgressDialog();
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //通过runOnUiThread()方法回到主线程处理逻辑
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeProgressDialog();
+                        Toast.makeText(PeopleInformation.this, "数据更新失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().toString();
+                boolean result = false;
+                Log.d("PeopleInfo.class", "onResponse: " + responseText);
+//                result = Utility.handlerOnePersonAttendanceInfo(responseText);
+                closeProgressDialog();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PeopleInformation.this, "数据更新成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 显示进度对话框
+     */
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(PeopleInformation.this);
+            progressDialog.setMessage("正在加载...");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+
+    /**
+     * 关闭进度对话框
+     */
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void initInfoList(String name) {
         AttendanceInfo info1 = new AttendanceInfo();
+        info1.setName(name);
         info1.setDate("2018-2-5");
         info1.setAbsence(false);
         info1.setLateTime(-10);
@@ -126,6 +197,7 @@ public class PeopleInformation extends AppCompatActivity {
         info1.setTimeRange("7:50AM----5:05PM");
 
         AttendanceInfo info2 = new AttendanceInfo();
+        info2.setName(name);
         info2.setDate("2018-2-4");
         info2.setAbsence(true);
         info2.setLateTime(-10);
@@ -133,6 +205,7 @@ public class PeopleInformation extends AppCompatActivity {
         info2.setTimeRange("");
 
         AttendanceInfo info3 = new AttendanceInfo();
+        info3.setName(name);
         info3.setDate("2018-2-3");
         info3.setAbsence(false);
         info3.setLateTime(10);

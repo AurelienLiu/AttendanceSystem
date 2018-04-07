@@ -1,10 +1,14 @@
-package com.example.liuxuanchi.project.peopleManagement;
+package com.example.liuxuanchi.project.db;
+
+import org.litepal.crud.DataSupport;
 
 /**
  * Created by liuxuanchi on 2018/3/31.
  */
 
-public class AttendanceInfo {
+public class AttendanceInfo extends DataSupport {
+
+    private String name;
 
     private String date;
 
@@ -54,5 +58,13 @@ public class AttendanceInfo {
 
     public void setTimeRange(String timeRange) {
         this.timeRange = timeRange;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

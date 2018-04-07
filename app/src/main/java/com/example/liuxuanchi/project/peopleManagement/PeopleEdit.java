@@ -28,7 +28,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.People;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.db.User;
 
 import org.litepal.tablemanager.Connector;
 

@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.liuxuanchi.project.R;
-import com.example.liuxuanchi.project.peopleManagement.AttendanceInfo;
+import com.example.liuxuanchi.project.db.AttendanceInfo;
 
 import java.util.List;
 
