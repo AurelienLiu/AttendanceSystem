@@ -18,6 +18,7 @@ public class People extends DataSupport{
     private String position;
     private String phoneNumber;
     private byte[] headshot;
+    private String jobNumber;
     //缺少时间戳 状态戳
 
 
@@ -98,4 +99,11 @@ public class People extends DataSupport{
         return byteArrayOutputStream.toByteArray();
     }
 
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
 }

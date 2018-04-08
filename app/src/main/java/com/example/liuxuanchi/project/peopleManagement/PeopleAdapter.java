@@ -174,6 +174,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         intent.putExtra("data_position",people.getPosition());
         intent.putExtra("data_phone_number",people.getPhoneNumber());
         intent.putExtra("data_headshot", people.getHeadshot());
+        intent.putExtra("data_job_number", people.getJobNumber());
     }
 
     @Override

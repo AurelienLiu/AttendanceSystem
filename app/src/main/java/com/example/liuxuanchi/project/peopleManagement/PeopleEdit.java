@@ -2,9 +2,11 @@ package com.example.liuxuanchi.project.peopleManagement;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -68,7 +70,7 @@ public class PeopleEdit extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
         //拍照获取相片
@@ -154,6 +156,7 @@ public class PeopleEdit extends AppCompatActivity {
         final RadioButton editFinance = (RadioButton)findViewById(R.id.edit_finance);
         final EditText editPosition = (EditText)findViewById(R.id.edit_position);
         final EditText editPhoneNumber = (EditText)findViewById(R.id.edit_phone_number);
+        final EditText editJobNumber = (EditText)findViewById(R.id.edit_job_number);
         //如果从添加按钮进入，则添加默认头像
         if (forAdd) {
             Toast.makeText(PeopleEdit.this, "添加默认头像", Toast.LENGTH_SHORT).show();
@@ -164,6 +167,7 @@ public class PeopleEdit extends AppCompatActivity {
             editName.setText(intent.getStringExtra("data_name"));
             editPosition.setText(intent.getStringExtra("data_position"));
             editPhoneNumber.setText(intent.getStringExtra("data_phone_number"));
+            editJobNumber.setText(intent.getStringExtra("data_job_number"));
             int dep = intent.getIntExtra("data_department", -1);
             switch (dep) {
                 case 0:
@@ -182,8 +186,8 @@ public class PeopleEdit extends AppCompatActivity {
                     break;
             }
             byte[] bytesOfHeadshot = intent.getByteArrayExtra("data_headshot");
-            photo.setImageBitmap(BitmapFactory.decodeByteArray(bytesOfHeadshot, 0,
-                    bytesOfHeadshot.length));
+            bitmap = BitmapFactory.decodeByteArray(bytesOfHeadshot,0, bytesOfHeadshot.length);
+            photo.setImageBitmap(bitmap);
         }
 
 
@@ -195,6 +199,7 @@ public class PeopleEdit extends AppCompatActivity {
         editEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(PeopleEdit.this, "点击了确定", Toast.LENGTH_SHORT).show();
                 People people = new People();
                 Department dep;
                 if (editProduction.isChecked()){
@@ -213,6 +218,8 @@ public class PeopleEdit extends AppCompatActivity {
                 people.setPhoneNumber(editPhoneNumber.getText().toString());
                 people.setDepartment(Department.departmentToInt(dep));
                 people.setHeadshot(People.bitmapToArrayOfByte(bitmap));
+                people.setJobNumber(editJobNumber.getText().toString());
+                Toast.makeText(PeopleEdit.this, editJobNumber.getText().toString()+"", Toast.LENGTH_SHORT).show();
                 //判断是添加人员还是修改人员信息
                 if (forAdd){
                     people.save();

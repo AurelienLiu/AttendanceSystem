@@ -67,7 +67,7 @@ public class PeopleInformation extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
 
@@ -100,7 +100,7 @@ public class PeopleInformation extends AppCompatActivity {
 //        peopleImage.setImageResource(PeopleAdapter.setPeopleImage(Department.intToDepartment(dep)));
         peopleImage.setImageBitmap(BitmapFactory.decodeByteArray(byteOfHeadshot, 0, byteOfHeadshot.length));
 
-        peopleId.setText("id： " + intent.getIntExtra("data_id", -1));
+        peopleId.setText("工号： " + intent.getStringExtra("data_job_number"));
         peoplePosition.setText(intent.getStringExtra("data_position"));
         peopleDepartment.setText(Department.intToHanzi(intent.getIntExtra
                 ("data_department", -1)));
@@ -110,9 +110,9 @@ public class PeopleInformation extends AppCompatActivity {
         navView.setCheckedItem(R.id.people_management);
         MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
-        //自动更新该人员签到历史信息
-        String address = "http://10.0.2.2/fahuichu.json";
-        queryFromServer(address);
+//        //自动更新该人员签到历史信息
+//        String address = "http://10.0.2.2/fahuichu.json";
+//        queryFromServer(address);
 
 
         //将考勤信息填入attendance content里面
@@ -127,7 +127,7 @@ public class PeopleInformation extends AppCompatActivity {
 
         infoList = new ArrayList<>();
         infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
-        //initInfoList(name);
+        initInfoList(name);
         AttendanceInfoAdapter adapter = new AttendanceInfoAdapter(PeopleInformation.this,
                 R.layout.attendance_info_item, infoList);
         MyListView attendacneList = (MyListView)findViewById(R.id.attendance_list);
