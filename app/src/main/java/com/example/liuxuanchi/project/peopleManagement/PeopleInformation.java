@@ -24,10 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.util.HttpUtil;
+import com.example.liuxuanchi.project.util.Utility;
 
 import org.litepal.crud.DataSupport;
 
@@ -39,13 +41,15 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class PeopleInformation extends AppCompatActivity {
+public class PeopleInformation extends BaseActivity {
 
     private TextView label;
     public static String phoneNumber;
     private DrawerLayout mDrawerLayout;
     private List<AttendanceInfo> infoList;
     private ProgressDialog progressDialog;
+    private String name;
+    private AttendanceInfoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class PeopleInformation extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
-        String name = intent.getStringExtra("data_name");
+        name = intent.getStringExtra("data_name");
         collapsingToolbarLayout.setTitle(name);
 
         //设置DrawerLayout
@@ -110,9 +114,9 @@ public class PeopleInformation extends AppCompatActivity {
         navView.setCheckedItem(R.id.people_management);
         MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
-//        //自动更新该人员签到历史信息
-//        String address = "http://10.0.2.2/fahuichu.json";
-//        queryFromServer(address);
+        //自动更新该人员签到历史信息
+        String address = "http://10.0.2.2/fahuichu.json";
+        queryFromServer(address);
 
 
         //将考勤信息填入attendance content里面
@@ -126,9 +130,9 @@ public class PeopleInformation extends AppCompatActivity {
 //        attendanceContent.setText(content);
 
         infoList = new ArrayList<>();
-        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
-        initInfoList(name);
-        AttendanceInfoAdapter adapter = new AttendanceInfoAdapter(PeopleInformation.this,
+//        infoList = DataSupport.findAll(AttendanceInfo.class);
+        //initInfoList(name);
+        adapter = new AttendanceInfoAdapter(PeopleInformation.this,
                 R.layout.attendance_info_item, infoList);
         MyListView attendacneList = (MyListView)findViewById(R.id.attendance_list);
         attendacneList.setAdapter(adapter);
@@ -151,15 +155,18 @@ public class PeopleInformation extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().toString();
+                String responseText = response.body().string();
                 boolean result = false;
                 Log.d("PeopleInfo.class", "onResponse: " + responseText);
-//                result = Utility.handlerOnePersonAttendanceInfo(responseText);
+                result = Utility.handlerOnePersonAttendanceInfo(responseText);
                 closeProgressDialog();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(PeopleInformation.this, "数据更新成功", Toast.LENGTH_SHORT).show();
+                        infoList.clear();
+                        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(PeopleInformation.this, "更新成功", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

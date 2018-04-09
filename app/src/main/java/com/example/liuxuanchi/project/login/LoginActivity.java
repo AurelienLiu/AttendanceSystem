@@ -10,10 +10,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
+import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.User;
-import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
+import com.example.liuxuanchi.project.statistics.statistics.StatisticsActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -35,6 +37,18 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //添加测试用户
+        List<User> userList = DataSupport.findAll(User.class);
+        if (userList.size() == 0) {
+            User user = new User();
+            user.setAccount("admin");
+            user.setPhone("10010");
+            user.setPassword("111111");
+            user.save();
+        }
 
         //初始化
         accountEdit = (EditText) findViewById(R.id.account);
@@ -89,7 +103,7 @@ public class LoginActivity extends BaseActivity {
                         }
                         editor.apply();
                         //登录成功，回到主活动
-                        Intent intent = new Intent(LoginActivity.this, PeopleManagement.class);
+                        Intent intent = new Intent(LoginActivity.this, StatisticsActivity.class);
                         //连接处：将用户名该信息传输出去
                         intent.putExtra("user_name", account);
                         startActivity(intent);
@@ -121,20 +135,6 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        Button buttonAdd = (Button)findViewById(R.id.button_add);
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<User> userList = DataSupport.findAll(User.class);
-                if (userList.size() == 0) {
-                    User user = new User();
-                    user.setAccount("admin");
-                    user.setPhone("10010");
-                    user.setPassword("111111");
-                    user.save();
-                }
-            }
-        });
     }
 }
 

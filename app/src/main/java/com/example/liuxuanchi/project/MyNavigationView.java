@@ -52,6 +52,10 @@ public class MyNavigationView extends NavigationView {
                             context.startActivity(intent);
                         }
                         break;
+                    case R.id.force_offline:
+                        mDrawerLayout.closeDrawers();
+                        Intent intent = new Intent("com.example.Jyy.FORCE_OFFLINE");
+                        context.sendBroadcast(intent);
                     default:
                         break;
                 }

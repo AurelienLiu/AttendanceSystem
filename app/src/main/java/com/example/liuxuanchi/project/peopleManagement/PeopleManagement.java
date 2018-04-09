@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.People;
@@ -28,7 +29,7 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PeopleManagement extends AppCompatActivity {
+public class PeopleManagement extends BaseActivity {
 
     private List<People> myList = new ArrayList<>();
     private TextView label;

@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.ReachedInfoLitepal;
@@ -41,7 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends BaseActivity {
 
     private PieChart mPieChart;
     private BarChart mBarChart;

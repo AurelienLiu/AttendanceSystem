@@ -1,6 +1,7 @@
 package com.example.liuxuanchi.project.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.liuxuanchi.project.db.AttendanceInfo;
 
@@ -20,6 +21,7 @@ public class Utility {
     public static boolean handlerOnePersonAttendanceInfo(String response) {
         if (!TextUtils.isEmpty(response)) {
             try {
+                Log.d("111", "handlerOnePersonAttendanceInfo : " + response);
                 JSONArray infoList = new JSONArray(response);
                 for (int i = 0; i < infoList.length(); i++) {
                     JSONObject infoObject = infoList.getJSONObject(i);
@@ -33,6 +35,7 @@ public class Utility {
                         info.setLateTime(infoObject.getInt("get_late_time"));
                         info.setLeaveEarlyTime(infoObject.getInt("get_leave_early_time"));
                         info.setTimeRange(infoObject.getString("time_range"));
+                        Log.d("111", "handlerOnePersonAttendanceInfo : " + name);
                         info.save();
                     }
                     return true;

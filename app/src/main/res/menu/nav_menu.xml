@@ -26,6 +26,10 @@
             android:id="@+id/setting"
             android:icon="@drawable/setting"
             android:title="设置" />
+        <item
+            android:id="@+id/force_offline"
+            android:icon="@drawable/exit"
+            android:title="退出登录"/>
     </group>
 
 </menu>

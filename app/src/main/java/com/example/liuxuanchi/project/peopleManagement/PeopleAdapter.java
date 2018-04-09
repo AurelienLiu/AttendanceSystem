@@ -104,12 +104,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                             public void onClick(DialogInterface dialog, int which) {}
                         });
                         builder1.show();
-                        Window dialogWindow = dialog.getWindow();
-                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                        DisplayMetrics d = parent.getContext().getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-                        lp.width = 350; // 宽度设置为屏幕的0.8
-                        lp.height = 150;
-                        dialogWindow.setAttributes(lp);
+//                        Window dialogWindow = dialog.getWindow();
+//                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//                        DisplayMetrics d = parent.getContext().getResources().getDisplayMetrics(); // 获取屏幕宽、高用
+//                        lp.width = 150; // 宽度设置为屏幕的0.8
+//                        lp.height = 150;
+//                        dialogWindow.setAttributes(lp);
                     }
                 });
                 dialog.setCancelable(true);
