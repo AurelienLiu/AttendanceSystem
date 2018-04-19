@@ -7,11 +7,14 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 import com.example.liuxuanchi.project.statistics.statistics.StatisticsActivity;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by liuxuanchi on 2018/3/1.
@@ -30,6 +33,7 @@ public class MyNavigationView extends NavigationView {
     public MyNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+    
 
     //设置navigationView中item的点击事件
     public static void onSelectItem(NavigationView navView, final Context context, final DrawerLayout mDrawerLayout) {
@@ -52,10 +56,17 @@ public class MyNavigationView extends NavigationView {
                             context.startActivity(intent);
                         }
                         break;
+                    case R.id.setting:
+                        mDrawerLayout.closeDrawers();
+                        if (context.getClass() != SettingActivity.class) {
+                            Intent intent = new Intent(context, SettingActivity.class);
+                            context.startActivity(intent);
+                        }
                     case R.id.force_offline:
                         mDrawerLayout.closeDrawers();
                         Intent intent = new Intent("com.example.Jyy.FORCE_OFFLINE");
                         context.sendBroadcast(intent);
+                        break;
                     default:
                         break;
                 }

@@ -12,11 +12,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.ReachedInfoLitepal;
+import com.example.liuxuanchi.project.login.LoginActivity;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -161,10 +164,12 @@ public class StatisticsActivity extends BaseActivity {
 //            }
 //        });
 
+
         //设置navigationView的点击事件
         navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setCheckedItem(R.id.attendance_record);
         MyNavigationView.onSelectItem(navView, StatisticsActivity.this, mDrawerLayout);
+
 
 
         //recyclerView

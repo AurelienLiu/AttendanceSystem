@@ -19,8 +19,26 @@ public class People extends DataSupport{
     private String phoneNumber;
     private byte[] headshot;
     private String jobNumber;
-    //缺少时间戳 状态戳
+    //时间戳，表示最近一次成功同步的时间
+    private long timeStamp;
+    //状态戳 -1表示待删除 0表示新增 1表示已更改 9表示已同步
+    private int status;
 
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public People(){
 

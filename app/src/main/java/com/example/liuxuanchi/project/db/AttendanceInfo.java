@@ -1,5 +1,7 @@
 package com.example.liuxuanchi.project.db;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -8,17 +10,30 @@ import org.litepal.crud.DataSupport;
 
 public class AttendanceInfo extends DataSupport {
 
+    //员工姓名
     private String name;
-
-    private String date;
-
-    private int lateTime;
-
-    private int leaveEarlyTime;
-
-    private String timeRange;
+    //签到时间
+    private long date;
 
     private boolean absence;
+    //时间戳，表示更新入库时间
+    private long timeStamp;
+
+
+    //    @SerializedName("late_time")
+//    private int lateTime;
+//    @SerializedName("leave_early_time")
+//    private int leaveEarlyTime;
+//    @SerializedName("time_range")
+//    private String timeRange;
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public boolean isAbsence() {
         return absence;
@@ -28,37 +43,37 @@ public class AttendanceInfo extends DataSupport {
         this.absence = absence;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
-
-    public int getLateTime() {
-        return lateTime;
-    }
-
-    public void setLateTime(int lateTime) {
-        this.lateTime = lateTime;
-    }
-
-    public int getLeaveEarlyTime() {
-        return leaveEarlyTime;
-    }
-
-    public void setLeaveEarlyTime(int leaveEarlyTime) {
-        this.leaveEarlyTime = leaveEarlyTime;
-    }
-
-    public String getTimeRange() {
-        return timeRange;
-    }
-
-    public void setTimeRange(String timeRange) {
-        this.timeRange = timeRange;
-    }
+//
+//    public int getLateTime() {
+//        return lateTime;
+//    }
+//
+//    public void setLateTime(int lateTime) {
+//        this.lateTime = lateTime;
+//    }
+//
+//    public int getLeaveEarlyTime() {
+//        return leaveEarlyTime;
+//    }
+//
+//    public void setLeaveEarlyTime(int leaveEarlyTime) {
+//        this.leaveEarlyTime = leaveEarlyTime;
+//    }
+//
+//    public String getTimeRange() {
+//        return timeRange;
+//    }
+//
+//    public void setTimeRange(String timeRange) {
+//        this.timeRange = timeRange;
+//    }
 
     public String getName() {
         return name;

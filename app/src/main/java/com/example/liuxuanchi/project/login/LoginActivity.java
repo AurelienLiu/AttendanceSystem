@@ -32,6 +32,7 @@ public class LoginActivity extends BaseActivity {
     private CheckBox rememberPass;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+    public static String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class LoginActivity extends BaseActivity {
                         }
                         editor.apply();
                         //登录成功，回到主活动
+                        userName = account;
                         Intent intent = new Intent(LoginActivity.this, StatisticsActivity.class);
                         //连接处：将用户名该信息传输出去
                         intent.putExtra("user_name", account);

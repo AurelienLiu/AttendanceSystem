@@ -222,10 +222,12 @@ public class PeopleEdit extends AppCompatActivity {
                 Toast.makeText(PeopleEdit.this, editJobNumber.getText().toString()+"", Toast.LENGTH_SHORT).show();
                 //判断是添加人员还是修改人员信息
                 if (forAdd){
+                    people.setStatus(0);
                     people.save();
                     Toast.makeText(PeopleEdit.this, "添加成功", Toast.LENGTH_SHORT).show();
                 } else {
                     int id = intent.getIntExtra("data_id", -1);
+                    people.setStatus(1);
                     people.update(id);
                     if (id > -1){
                         Toast.makeText(PeopleEdit.this, "修改成功", Toast.LENGTH_SHORT).show();

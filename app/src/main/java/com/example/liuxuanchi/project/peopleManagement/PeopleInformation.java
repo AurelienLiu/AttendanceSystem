@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,23 +115,15 @@ public class PeopleInformation extends BaseActivity {
         navView.setCheckedItem(R.id.people_management);
         MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
-        //自动更新该人员签到历史信息
-        String address = "http://10.0.2.2/fahuichu.json";
-        queryFromServer(address);
+//        //自动更新该人员签到历史信息
+//        String address = "http://10.0.2.2/fahuichu.json";
+//        queryFromServer(address);
 
 
         //将考勤信息填入attendance content里面
-//        StringBuilder builder = new StringBuilder();
-//        builder.append("在这里看到他近期的考勤情况" + "\n");
-//        for(int i = 0; i < 500; i++) {
-//            builder.append("12345");
-//        }
-//        String content = builder.toString();
-//        TextView attendanceContent = (TextView)findViewById(R.id.attendance_content);
-//        attendanceContent.setText(content);
 
         infoList = new ArrayList<>();
-//        infoList = DataSupport.findAll(AttendanceInfo.class);
+        infoList = DataSupport.findAll(AttendanceInfo.class);
         //initInfoList(name);
         adapter = new AttendanceInfoAdapter(PeopleInformation.this,
                 R.layout.attendance_info_item, infoList);
@@ -138,40 +131,40 @@ public class PeopleInformation extends BaseActivity {
         attendacneList.setAdapter(adapter);
     }
 
-    private void queryFromServer(String address) {
-        showProgressDialog();
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //通过runOnUiThread()方法回到主线程处理逻辑
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(PeopleInformation.this, "数据更新失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().string();
-                boolean result = false;
-                Log.d("PeopleInfo.class", "onResponse: " + responseText);
-                result = Utility.handlerOnePersonAttendanceInfo(responseText);
-                closeProgressDialog();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        infoList.clear();
-                        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
-                        adapter.notifyDataSetChanged();
-                        Toast.makeText(PeopleInformation.this, "更新成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-    }
+//    private void queryFromServer(String address) {
+//        showProgressDialog();
+//        HttpUtil.sendOkHttpRequest(address, new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                //通过runOnUiThread()方法回到主线程处理逻辑
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        closeProgressDialog();
+//                        Toast.makeText(PeopleInformation.this, "数据更新失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String responseText = response.body().string();
+//                boolean result = false;
+//                Log.d("PeopleInfo.class", "onResponse: " + responseText);
+//                result = Utility.handlerOnePersonAttendanceInfo(responseText);
+//                closeProgressDialog();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        infoList.clear();
+//                        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
+//                        adapter.notifyDataSetChanged();
+//                        Toast.makeText(PeopleInformation.this, "更新成功", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     /**
      * 显示进度对话框
@@ -194,38 +187,56 @@ public class PeopleInformation extends BaseActivity {
         }
     }
 
-    private void initInfoList(String name) {
-        AttendanceInfo info1 = new AttendanceInfo();
-        info1.setName(name);
-        info1.setDate("2018-2-5");
-        info1.setAbsence(false);
-        info1.setLateTime(-10);
-        info1.setLeaveEarlyTime(-5);
-        info1.setTimeRange("7:50AM----5:05PM");
+//    private void initInfoList(String name) {
+//        AttendanceInfo info1 = new AttendanceInfo();
+//        info1.setName(name);
+//        info1.setDate("2018-2-5");
+//        info1.setAbsence(false);
+//        info1.setLateTime(-10);
+//        info1.setLeaveEarlyTime(-5);
+//        info1.setTimeRange("7:50AM----5:05PM");
+//
+//        AttendanceInfo info2 = new AttendanceInfo();
+//        info2.setName(name);
+//        info2.setDate("2018-2-4");
+//        info2.setAbsence(true);
+//        info2.setLateTime(-10);
+//        info2.setLeaveEarlyTime(-5);
+//        info2.setTimeRange("");
+//
+//        AttendanceInfo info3 = new AttendanceInfo();
+//        info3.setName(name);
+//        info3.setDate("2018-2-3");
+//        info3.setAbsence(false);
+//        info3.setLateTime(10);
+//        info3.setLeaveEarlyTime(-5);
+//        info3.setTimeRange("8:10AM----5:05PM");
+//
+//        AttendanceInfo info4 = new AttendanceInfo();
+//        info4.setName(name);
+//        info4.setDate("2018-2-2");
+//        info4.setAbsence(false);
+//        info4.setLateTime(-5);
+//        info4.setLeaveEarlyTime(-5);
+//        info4.setTimeRange("7:45AM----5:05PM");
+//
+//        AttendanceInfo info5 = new AttendanceInfo();
+//        info5.setName(name);
+//        info5.setDate("2018-2-1");
+//        info5.setAbsence(false);
+//        info5.setLateTime(-10);
+//        info5.setLeaveEarlyTime(-5);
+//        info5.setTimeRange("7:40AM----5:15PM");
+//        for (int i = 0; i < 1; i++) {
+//            infoList.add(info2);
+//            infoList.add(info1);
+//            infoList.add(info3);
+//            infoList.add(info4);
+//            infoList.add(info5);
+//        }
 
-        AttendanceInfo info2 = new AttendanceInfo();
-        info2.setName(name);
-        info2.setDate("2018-2-4");
-        info2.setAbsence(true);
-        info2.setLateTime(-10);
-        info2.setLeaveEarlyTime(-5);
-        info2.setTimeRange("");
 
-        AttendanceInfo info3 = new AttendanceInfo();
-        info3.setName(name);
-        info3.setDate("2018-2-3");
-        info3.setAbsence(false);
-        info3.setLateTime(10);
-        info3.setLeaveEarlyTime(-5);
-        info3.setTimeRange("8:10AM----5:05PM");
-        for (int i = 0; i < 10; i++) {
-            infoList.add(info2);
-            infoList.add(info1);
-            infoList.add(info3);
-        }
-
-
-    }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
