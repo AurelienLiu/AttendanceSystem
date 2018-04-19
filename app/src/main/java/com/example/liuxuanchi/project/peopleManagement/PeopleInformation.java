@@ -75,6 +75,10 @@ public class PeopleInformation extends BaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
+        //设置navigationView的点击事件
+        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
+        navView.setCheckedItem(R.id.people_management);
+        MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
         //电话呼叫联系人
         phoneNumber = intent.getStringExtra("data_phone_number");
@@ -110,10 +114,7 @@ public class PeopleInformation extends BaseActivity {
         peopleDepartment.setText(Department.intToHanzi(intent.getIntExtra
                 ("data_department", -1)));
 
-        //设置navigationView的点击事件
-        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
-        navView.setCheckedItem(R.id.people_management);
-        MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
+
 
 //        //自动更新该人员签到历史信息
 //        String address = "http://10.0.2.2/fahuichu.json";
