@@ -117,7 +117,7 @@ public class StatisticsActivity extends BaseActivity {
 
         //设置x轴
         String[] times = new String[]{"8:00","8:15","8:30", "8:45", "9:00","9:15", "9:30", "9:45",
-                "10:00","1:30","1:45","2:00","2:15","2:30","2:45","3:00","24:00"};
+                "10:00","13:30","13:45","14:00","14:15","14:30","14:45","15:00","24:00"};
         XAxis xAxis = mBarChart.getXAxis();
         xAxis.setValueFormatter(new MyXAxisValueFormatter(times));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
