@@ -84,6 +84,10 @@ public class PeopleManagement extends BaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
+        //设置navigationView的点击事件
+        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
+        navView.setCheckedItem(R.id.people_management);
+        MyNavigationView.onSelectItem(navView, PeopleManagement.this, mDrawerLayout);
 
 
         //设置Recycler view
@@ -103,11 +107,6 @@ public class PeopleManagement extends BaseActivity {
                 startActivity(intent);
             }
         });
-
-        //设置navigationView的点击事件
-        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
-        navView.setCheckedItem(R.id.people_management);
-        MyNavigationView.onSelectItem(navView, PeopleManagement.this, mDrawerLayout);
 
 
     }

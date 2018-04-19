@@ -1,15 +1,19 @@
 package com.example.liuxuanchi.project;
 
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.db.People;
+import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 import com.example.liuxuanchi.project.util.HttpUtil;
 import com.example.liuxuanchi.project.util.Utility;
 
@@ -48,6 +52,10 @@ public class SettingActivity extends BaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
+        //设置navigationView的点击事件
+        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
+        navView.setCheckedItem(R.id.setting);
+        MyNavigationView.onSelectItem(navView, SettingActivity.this, mDrawerLayout);
 
 
         //考勤信息下载及入库
@@ -127,5 +135,17 @@ public class SettingActivity extends BaseActivity {
                 }, requestBody);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 }
