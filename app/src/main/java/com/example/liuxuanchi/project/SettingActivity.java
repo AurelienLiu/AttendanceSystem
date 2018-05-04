@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.db.People;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 import com.example.liuxuanchi.project.util.HttpUtil;
@@ -135,7 +136,26 @@ public class SettingActivity extends BaseActivity {
                 }, requestBody);
             }
         });
+
+
+        //本地添加考勤信息
+        Button addAttendanceInfo = (Button)findViewById(R.id.add_attendance_info);
+        addAttendanceInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataSupport.deleteAll(AttendanceInfo.class);
+                long time = 1523948318000L;
+                for (int i = 0; i < 5; i++) {
+                    AttendanceInfo info = new AttendanceInfo(1, "冯涛", time - 24 * 60 * 60 * 1000 * i, false, time);
+                    info.save();
+                }
+            }
+        });
+
     }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -66,6 +66,8 @@ public class PeopleInformation extends BaseActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
         name = intent.getStringExtra("data_name");
         collapsingToolbarLayout.setTitle(name);
+        int id = intent.getIntExtra("data_id", -1);
+        Toast.makeText(PeopleInformation.this, "name=" + name + "id=" + id, Toast.LENGTH_SHORT).show();
 
         //设置DrawerLayout
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -111,9 +113,9 @@ public class PeopleInformation extends BaseActivity {
 
         peopleId.setText("工号： " + intent.getStringExtra("data_job_number"));
         peoplePosition.setText(intent.getStringExtra("data_position"));
-        peopleDepartment.setText(Department.intToHanzi(intent.getIntExtra
-                ("data_department", -1)));
-
+//        peopleDepartment.setText(Department.intToHanzi(intent.getIntExtra
+//                ("data_department", -1)));
+        peopleDepartment.setText(intent.getStringExtra("data_department"));
 
 
 //        //自动更新该人员签到历史信息

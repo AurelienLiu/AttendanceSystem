@@ -13,7 +13,8 @@ import java.io.ByteArrayOutputStream;
 public class People extends DataSupport{
     private String name;
     private int id;
-    private int department;
+//    private int department;
+    private String department;
     private int level;
     private String position;
     private String phoneNumber;
@@ -48,12 +49,6 @@ public class People extends DataSupport{
         this.name = name;
     }
 
-    public People(String name, int id, int departement, int level){
-        this.name = name;
-        this.id = id;
-        this.department = departement;
-        this.level = level;
-    }
 
     public String getName() {
         return name;
@@ -71,11 +66,11 @@ public class People extends DataSupport{
         this.id = id;
     }
 
-    public int getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(int department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 

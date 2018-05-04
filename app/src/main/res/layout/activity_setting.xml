@@ -32,6 +32,12 @@
             android:layout_height="wrap_content"
             android:text="上传人员信息更改"/>
 
+        <Button
+            android:id="@+id/add_attendance_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="本地添加考勤信息"/>
+
 
 
     </LinearLayout>

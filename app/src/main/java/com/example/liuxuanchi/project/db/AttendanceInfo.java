@@ -10,6 +10,9 @@ import org.litepal.crud.DataSupport;
 
 public class AttendanceInfo extends DataSupport {
 
+    private int id;
+    //员工id
+    private int people_id;
     //员工姓名
     private String name;
     //签到时间
@@ -26,6 +29,33 @@ public class AttendanceInfo extends DataSupport {
 //    private int leaveEarlyTime;
 //    @SerializedName("time_range")
 //    private String timeRange;
+    public AttendanceInfo(){
+
+    }
+
+    public AttendanceInfo(int people_id, String name, long data, boolean absence, long timeStamp){
+        setPeople_id(people_id);
+        setName(name);
+        setDate(data);
+        setAbsence(absence);
+        setTimeStamp(timeStamp);
+    }
+
+    public int getPeople_id() {
+        return people_id;
+    }
+
+    public void setPeople_id(int people_id) {
+        this.people_id = people_id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public long getTimeStamp() {
         return timeStamp;

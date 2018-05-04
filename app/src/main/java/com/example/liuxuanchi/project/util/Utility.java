@@ -89,6 +89,22 @@ public class Utility {
         return res;
     }
 
+    /**
+           * 日期格式字符串转换成时间戳
+           * @param date_str 字符串日期
+           * @return
+           */
+     public static long date2TimeStamp(String date_str){
+         String format = "yyyy-MM-dd HH:mm:ss";
+         try {
+             SimpleDateFormat sdf = new SimpleDateFormat(format);
+             return sdf.parse(date_str).getTime();
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         return -1;
+     }
+
 
     /**
      * 将尚未更新至服务器的人员数据转换为Json格式的String，之后上传给服务器
@@ -106,7 +122,9 @@ public class Utility {
             jsonObject.put("job_number", people.getJobNumber());
             jsonArray.put(jsonObject);
         }
-       return jsonArray.toString();
+//        Gson gson = new Gson();
+//        String jsonString = gson.toJson(peopleList);
+        return jsonArray.toString();
     }
 
 }

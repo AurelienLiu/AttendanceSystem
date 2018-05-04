@@ -16,6 +16,7 @@ import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.User;
 import com.example.liuxuanchi.project.statistics.statistics.StatisticsActivity;
+import com.example.liuxuanchi.project.util.Utility;
 
 import org.litepal.crud.DataSupport;
 
@@ -50,6 +51,7 @@ public class LoginActivity extends BaseActivity {
             user.setPassword("111111");
             user.save();
         }
+
 
         //初始化
         accountEdit = (EditText) findViewById(R.id.account);
