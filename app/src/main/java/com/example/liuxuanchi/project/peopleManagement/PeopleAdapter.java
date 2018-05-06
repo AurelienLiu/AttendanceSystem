@@ -94,7 +94,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                         builder1.setPositiveButton("确认删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                people.delete();
+                                //people.delete();
+                                //将人员的状态戳改为-1，即待删除。服务器端也删除后再在本地删除
+                                people.setStatus(-1);
                                 Intent intent = new Intent(parent.getContext(), PeopleManagement.class);
                                 parent.getContext().startActivity(intent);
                             }

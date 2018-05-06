@@ -44,4 +44,20 @@ public class Utility {
         }
         return false;
     }
+
+
+    /**
+     * 处理人员信息入库
+     */
+    public static boolean handlePeopleInfo(String response) {
+        return false;
+    }
+
+    /**
+     * 处理考勤信息入库
+     */
+    public static boolean handleAttendanceInfo(String response) {
+        return false;
+    }
+
 }

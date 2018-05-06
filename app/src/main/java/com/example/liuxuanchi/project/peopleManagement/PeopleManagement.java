@@ -61,7 +61,7 @@ public class PeopleManagement extends AppCompatActivity {
             List<People> myList4 = DataSupport.where("department = ?", "-1").find(People.class);
             myList.addAll(myList4);
         } else {
-            myList = DataSupport.findAll(People.class);
+            myList = DataSupport.where("status > ?", "-1").find(People.class);
         }
 
 
