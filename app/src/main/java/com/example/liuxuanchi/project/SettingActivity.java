@@ -1,5 +1,11 @@
 package com.example.liuxuanchi.project;
 
+import android.app.Activity;
+import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
+import android.os.SystemClock;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,6 +16,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.db.AttendanceInfo;
@@ -22,6 +30,7 @@ import org.json.JSONException;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -36,6 +45,8 @@ public class SettingActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,13 +155,76 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 DataSupport.deleteAll(AttendanceInfo.class);
-                long time = 1523948318000L;
-                for (int i = 0; i < 5; i++) {
-                    AttendanceInfo info = new AttendanceInfo(1, "冯涛", time - 24 * 60 * 60 * 1000 * i, false, time);
-                    info.save();
+//                long time = SystemClock.elapsedRealtime();
+                long hour = 60 * 60 * 1000;
+                long time = System.currentTimeMillis() - 6 * hour;
+                long time2 = time + 32400000;
+                long oneDay = 24 * 60 * 60 * 1000;
+                for (int i = 0; i < 40; i++) {
+                    if (i % 7 == 0) {
+                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", (long)time - oneDay * i, true, time);
+                        info.save();
+                    } else {
+                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", (long)time - oneDay * i, false, time);
+                        info.save();
+                    }
+                    Log.d("111111111", "" + (oneDay * i));
+                }
+                for (int i = 0; i < 40; i++) {
+                    if (i % 6 == 0) {
+                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", time2 - oneDay * i, true, time);
+                        info.save();
+                    } else {
+                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", time2 - oneDay * i, false, time);
+                        info.save();
+                    }
                 }
             }
         });
+
+
+        /**
+         * 选择时间
+         */
+        Button chooseTime1 = (Button)findViewById(R.id.choose_time1);
+        final TextView time1= (TextView)findViewById(R.id.time1);
+        chooseTime1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog(SettingActivity.this,2 , time1, Calendar.getInstance());
+            }
+        });
+        Button chooseTime2 = (Button)findViewById(R.id.choose_time2);
+        final TextView time2= (TextView)findViewById(R.id.time2);
+        chooseTime2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog(SettingActivity.this,2 , time2, Calendar.getInstance());
+            }
+        });
+        //将之前定好的时间填入TextView
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        int hour1 = pref.getInt("hour1", -1);
+        int hour2 = pref.getInt("hour2", -1);
+        int minute1 = pref.getInt("minute1", -1);
+        int minute2 = pref.getInt("minute2", -1);
+        if (hour1 > -1 && minute1 > -1) {
+            time1.setText(hour1 + "时" + minute1 + "分");
+        }
+        if (hour2 > -1 && minute2 > -1) {
+            time2.setText(hour2 + "时" + minute2 + "分");
+        }
+
+        //测试用
+//        Button test = (Button)findViewById(R.id.test);
+//        test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int i = Utility.isLateOrGoEarly(System.currentTimeMillis());
+//                Toast.makeText(SettingActivity.this, i + "小时", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
 
     }
 
@@ -167,5 +241,33 @@ public class SettingActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    public static void showTimePickerDialog(final Activity activity, int themeResId, final TextView tv, Calendar calendar) {
+        // Calendar c = Calendar.getInstance();
+        // 创建一个TimePickerDialog实例，并把它显示出来
+        // 解释一哈，Activity是context的子类
+        new TimePickerDialog( activity,themeResId,
+                // 绑定监听器
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        tv.setText( hourOfDay + "时" + minute  + "分");
+                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(activity).edit();
+                        if (tv.getId() == R.id.time1) {
+                            editor.putInt("hour1", hourOfDay);
+                            editor.putInt("minute1", minute);
+                        } else {
+                            editor.putInt("hour2", hourOfDay);
+                            editor.putInt("minute2", minute);
+                        }
+                        editor.apply();
+                    }
+                }
+                // 设置初始时间
+                , calendar.get(Calendar.HOUR_OF_DAY)
+                , calendar.get(Calendar.MINUTE)
+                // true表示采用24小时制
+                ,true).show();
     }
 }

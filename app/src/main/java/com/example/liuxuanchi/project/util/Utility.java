@@ -1,11 +1,16 @@
 package com.example.liuxuanchi.project.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.db.People;
+import com.example.liuxuanchi.project.peopleManagement.PeopleInformation;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -83,7 +88,16 @@ public class Utility {
     }
     public static String stampToDate(long s){
         String res;
+        long hour = 60 * 60 * 1000;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(s);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
+    public static String stampToDate(long s, String format){
+        String res;
+        long hour = 60 * 60 * 1000;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         Date date = new Date(s);
         res = simpleDateFormat.format(date);
         return res;
@@ -94,7 +108,7 @@ public class Utility {
            * @param date_str 字符串日期
            * @return
            */
-     public static long date2TimeStamp(String date_str){
+     public static long dateToTimeStamp(String date_str){
          String format = "yyyy-MM-dd HH:mm:ss";
          try {
              SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -127,4 +141,51 @@ public class Utility {
         return jsonArray.toString();
     }
 
+
+    /**
+     * 判断该人员是否迟到或早退
+     */
+    public static boolean isLateOrGoEarly(Context context, long s) {
+        Date date = new Date(s);
+        int hour = date.getHours();
+        int minute = date.getMinutes();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        int hour1 = pref.getInt("hour1", -1);
+        int minute1 = pref.getInt("minute1", -1);
+        int hour2 = pref.getInt("hour2", -1);
+        int minute2 = pref.getInt("minute2", -1);
+        if ((hour1 < 0 || minute1 < 0) && (hour2 < 0 || minute2 < 0)) {
+            Toast.makeText(context, "请在设置页面设定预计上下班时间！", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (hour1 > -1 && minute1 > -1 && hour2 > -1 && minute2 > -1) {
+            if (hour < hour1) {
+                return false;
+            } else if (hour == hour1 && minute < minute1 + 1) {
+                return false;
+            } else if (hour > hour2) {
+                return false;
+            } else if (hour == hour2 && minute > minute2 - 1) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (hour2 < 0 || minute2 < 0) {
+            if (hour < hour1) {
+                return false;
+            } else if (hour == hour1 && minute < minute1 + 1) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (hour > hour2) {
+                return false;
+            } else if (hour == hour2 && minute > minute2 - 1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 }

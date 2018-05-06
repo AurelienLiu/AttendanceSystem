@@ -12,7 +12,7 @@ public class AttendanceInfo extends DataSupport {
 
     private int id;
     //员工id
-    private int people_id;
+    private int peopleId;
     //员工姓名
     private String name;
     //签到时间
@@ -33,20 +33,20 @@ public class AttendanceInfo extends DataSupport {
 
     }
 
-    public AttendanceInfo(int people_id, String name, long data, boolean absence, long timeStamp){
-        setPeople_id(people_id);
+    public AttendanceInfo(int peopleId, String name, long data, boolean absence, long timeStamp){
+        setPeopleId(peopleId);
         setName(name);
         setDate(data);
         setAbsence(absence);
         setTimeStamp(timeStamp);
     }
 
-    public int getPeople_id() {
-        return people_id;
+    public int getPeopleId() {
+        return peopleId;
     }
 
-    public void setPeople_id(int people_id) {
-        this.people_id = people_id;
+    public void setPeopleId(int peopleId) {
+        this.peopleId = peopleId;
     }
 
     public int getId() {

@@ -42,7 +42,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class PeopleInformation extends BaseActivity {
+public class PeopleInformation extends BaseActivity implements View.OnClickListener{
 
     private TextView label;
     public static String phoneNumber;
@@ -51,11 +51,22 @@ public class PeopleInformation extends BaseActivity {
     private ProgressDialog progressDialog;
     private String name;
     private AttendanceInfoAdapter adapter;
+    private TextView timeRange;
+    private TextView checkTime;
+    private TextView lateTime;
+    private TextView absenceTime;
+    private int id;
+    private long nowTimeStamp;
+    //考勤信息的列表
+    MyListView attendacneList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_information);
+
+        //获取当前时间时间戳，用于筛选考勤数据
+        nowTimeStamp = System.currentTimeMillis();
 
         final Intent intent = getIntent();
 
@@ -66,7 +77,7 @@ public class PeopleInformation extends BaseActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
         name = intent.getStringExtra("data_name");
         collapsingToolbarLayout.setTitle(name);
-        int id = intent.getIntExtra("data_id", -1);
+        id = intent.getIntExtra("data_id", -1);
         Toast.makeText(PeopleInformation.this, "name=" + name + "id=" + id, Toast.LENGTH_SHORT).show();
 
         //设置DrawerLayout
@@ -123,15 +134,51 @@ public class PeopleInformation extends BaseActivity {
 //        queryFromServer(address);
 
 
+        /**
+         * 周、月、总三个按钮
+         */
+        timeRange = (TextView)findViewById(R.id.time_range);
+        checkTime = (TextView)findViewById(R.id.check_time);
+        lateTime = (TextView)findViewById(R.id.late_time);
+        absenceTime = (TextView)findViewById(R.id.absence_time);
+        Button weekButton = (Button)findViewById(R.id.week_range);
+        Button monthButton = (Button)findViewById(R.id.month_range);
+        Button allButton = (Button)findViewById(R.id.all_range);
+        weekButton.setOnClickListener(this);
+        monthButton.setOnClickListener(this);
+        allButton.setOnClickListener(this);
+
         //将考勤信息填入attendance content里面
 
         infoList = new ArrayList<>();
-        infoList = DataSupport.findAll(AttendanceInfo.class);
-        //initInfoList(name);
+        long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
+        //通过AttendanceInfo里的peopleId匹配对应的考勤数据
+        infoList = DataSupport.where("peopleId=?", ""+id)
+                .where("date>?", "" + (nowTimeStamp - oneWeek))
+                .order("date desc")
+                .find(AttendanceInfo.class);
         adapter = new AttendanceInfoAdapter(PeopleInformation.this,
                 R.layout.attendance_info_item, infoList);
-        MyListView attendacneList = (MyListView)findViewById(R.id.attendance_list);
+        attendacneList = (MyListView)findViewById(R.id.attendance_list);
         attendacneList.setAdapter(adapter);
+        checkTime.setText(infoList.size() + "");
+
+        //计算缺勤次数
+        int absence = 0;
+        int lateOrEarly = 0;
+        for (AttendanceInfo info : infoList) {
+            if (info.isAbsence()) {
+                absence++;
+            } else {
+                if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                    lateOrEarly++;
+                }
+            }
+        }
+        absenceTime.setText(absence + "");
+        lateTime.setText(lateOrEarly + "");
+
+
     }
 
 //    private void queryFromServer(String address) {
@@ -190,56 +237,6 @@ public class PeopleInformation extends BaseActivity {
         }
     }
 
-//    private void initInfoList(String name) {
-//        AttendanceInfo info1 = new AttendanceInfo();
-//        info1.setName(name);
-//        info1.setDate("2018-2-5");
-//        info1.setAbsence(false);
-//        info1.setLateTime(-10);
-//        info1.setLeaveEarlyTime(-5);
-//        info1.setTimeRange("7:50AM----5:05PM");
-//
-//        AttendanceInfo info2 = new AttendanceInfo();
-//        info2.setName(name);
-//        info2.setDate("2018-2-4");
-//        info2.setAbsence(true);
-//        info2.setLateTime(-10);
-//        info2.setLeaveEarlyTime(-5);
-//        info2.setTimeRange("");
-//
-//        AttendanceInfo info3 = new AttendanceInfo();
-//        info3.setName(name);
-//        info3.setDate("2018-2-3");
-//        info3.setAbsence(false);
-//        info3.setLateTime(10);
-//        info3.setLeaveEarlyTime(-5);
-//        info3.setTimeRange("8:10AM----5:05PM");
-//
-//        AttendanceInfo info4 = new AttendanceInfo();
-//        info4.setName(name);
-//        info4.setDate("2018-2-2");
-//        info4.setAbsence(false);
-//        info4.setLateTime(-5);
-//        info4.setLeaveEarlyTime(-5);
-//        info4.setTimeRange("7:45AM----5:05PM");
-//
-//        AttendanceInfo info5 = new AttendanceInfo();
-//        info5.setName(name);
-//        info5.setDate("2018-2-1");
-//        info5.setAbsence(false);
-//        info5.setLateTime(-10);
-//        info5.setLeaveEarlyTime(-5);
-//        info5.setTimeRange("7:40AM----5:15PM");
-//        for (int i = 0; i < 1; i++) {
-//            infoList.add(info2);
-//            infoList.add(info1);
-//            infoList.add(info3);
-//            infoList.add(info4);
-//            infoList.add(info5);
-//        }
-
-
-//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -290,6 +287,85 @@ public class PeopleInformation extends BaseActivity {
     }
 
 
-
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.week_range:
+                long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
+                timeRange.setText("本周");
+                infoList.clear();
+                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
+                        .where("date>?", "" + (nowTimeStamp - oneWeek))
+                        .order("date desc")
+                        .find(AttendanceInfo.class));
+                adapter.notifyDataSetChanged();
+                checkTime.setText(infoList.size() + "");
+                //计算缺勤次数
+                int absence1 = 0;
+                int lateOrEarly1 = 0;
+                for (AttendanceInfo info : infoList) {
+                    if (info.isAbsence()) {
+                        absence1++;
+                    } else {
+                        if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                            lateOrEarly1++;
+                        }
+                    }
+                }
+                absenceTime.setText(absence1 + "");
+                lateTime.setText(lateOrEarly1 + "");
+                break;
+            case R.id.month_range:
+                long oneMonth = (long)30 * 24 * 60 * 60 * 1000;  //一周的毫秒数
+                timeRange.setText("本月");
+                infoList.clear();
+                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
+                        .where("date>?", "" + (nowTimeStamp - oneMonth))
+                        .order("date desc")
+                        .find(AttendanceInfo.class));
+                adapter.notifyDataSetChanged();
+                String t = infoList.size() + "";
+                checkTime.setText(t);
+                //计算缺勤次数
+                int absence2 = 0;
+                int lateOrEarly2 = 0;
+                for (AttendanceInfo info : infoList) {
+                    if (info.isAbsence()) {
+                        absence2++;
+                    } else {
+                        if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                            lateOrEarly2++;
+                        }
+                    }
+                }
+                absenceTime.setText(absence2 + "");
+                lateTime.setText(lateOrEarly2 + "");
+                break;
+            case R.id.all_range:
+                timeRange.setText("总");
+                infoList.clear();
+                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
+                        .order("date desc")
+                        .find(AttendanceInfo.class));
+                adapter.notifyDataSetChanged();
+                checkTime.setText(infoList.size() + "");
+                //计算缺勤次数
+                int absence3 = 0;
+                int lateOrEarly3 = 0;
+                for (AttendanceInfo info : infoList) {
+                    if (info.isAbsence()) {
+                        absence3++;
+                    } else {
+                        if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                            lateOrEarly3++;
+                        }
+                    }
+                }
+                absenceTime.setText(absence3 + "");
+                lateTime.setText(lateOrEarly3 + "");
+                break;
+            default:
+                break;
+        }
+    }
 }

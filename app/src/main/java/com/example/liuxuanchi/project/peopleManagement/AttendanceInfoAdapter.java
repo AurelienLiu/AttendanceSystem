@@ -1,12 +1,14 @@
 package com.example.liuxuanchi.project.peopleManagement;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -35,19 +37,18 @@ public class AttendanceInfoAdapter extends ArrayAdapter<AttendanceInfo> {
         AttendanceInfo info = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
         TextView dateView = (TextView)view.findViewById(R.id.att_date);
-        ImageButton button = (ImageButton)view.findViewById(R.id.att_button);
-        dateView.setText(Utility.stampToDate(info.getDate()));
-//        setAttButton(button, info);
+        FrameLayout layout = (FrameLayout)view.findViewById(R.id.att_layout);
+        if (info.isAbsence()) {
+            dateView.setText(Utility.stampToDate(info.getDate(), "yyyy-MM-dd") + "    缺勤");
+            layout.setBackgroundColor(Color.RED);
+        } else if (Utility.isLateOrGoEarly(parent.getContext(), info.getDate())) {
+            dateView.setText(Utility.stampToDate(info.getDate()));
+            layout.setBackgroundColor(Color.YELLOW);
+        } else {
+            dateView.setText(Utility.stampToDate(info.getDate()));
+        }
         return view;
     }
 
-//    private void setAttButton(ImageButton button, AttendanceInfo info) {
-//        if (info.getLateTime() < 0 && info.getLeaveEarlyTime() < 0 && (!info.isAbsence())) {
-//            button.setImageResource(R.drawable.green_color);
-//        } else if (info.isAbsence()) {
-//            button.setImageResource(R.drawable.red_color);
-//        } else {
-//            button.setImageResource(R.drawable.yellow_color);
-//        }
-//    }
+
 }
