@@ -2,9 +2,11 @@ package com.example.liuxuanchi.project.peopleManagement;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -68,7 +70,7 @@ public class PeopleEdit extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
         //拍照获取相片
@@ -147,13 +149,15 @@ public class PeopleEdit extends AppCompatActivity {
         forAdd = intent.getBooleanExtra("for_add", false);
 
         final EditText editName = (EditText)findViewById(R.id.edit_name);
-        final RadioGroup editDepartment = (RadioGroup) findViewById(R.id.edit_department_group);
-        final RadioButton editProduction = (RadioButton)findViewById(R.id.edit_production);
-        final RadioButton editMarket = (RadioButton)findViewById(R.id.edit_market);
-        final RadioButton editLogistics = (RadioButton)findViewById(R.id.edit_logistics);
-        final RadioButton editFinance = (RadioButton)findViewById(R.id.edit_finance);
+//        final RadioGroup editDepartment = (RadioGroup) findViewById(R.id.edit_department_group);
+        final EditText editDepartment = (EditText)findViewById(R.id.edit_department);
+//        final RadioButton editProduction = (RadioButton)findViewById(R.id.edit_production);
+//        final RadioButton editMarket = (RadioButton)findViewById(R.id.edit_market);
+//        final RadioButton editLogistics = (RadioButton)findViewById(R.id.edit_logistics);
+//        final RadioButton editFinance = (RadioButton)findViewById(R.id.edit_finance);
         final EditText editPosition = (EditText)findViewById(R.id.edit_position);
         final EditText editPhoneNumber = (EditText)findViewById(R.id.edit_phone_number);
+        final EditText editJobNumber = (EditText)findViewById(R.id.edit_job_number);
         //如果从添加按钮进入，则添加默认头像
         if (forAdd) {
             Toast.makeText(PeopleEdit.this, "添加默认头像", Toast.LENGTH_SHORT).show();
@@ -164,26 +168,27 @@ public class PeopleEdit extends AppCompatActivity {
             editName.setText(intent.getStringExtra("data_name"));
             editPosition.setText(intent.getStringExtra("data_position"));
             editPhoneNumber.setText(intent.getStringExtra("data_phone_number"));
-            int dep = intent.getIntExtra("data_department", -1);
-            switch (dep) {
-                case 0:
-                    editProduction.setChecked(true);
-                    break;
-                case 1:
-                    editMarket.setChecked(true);
-                    break;
-                case 2:
-                    editLogistics.setChecked(true);
-                    break;
-                case 3:
-                    editFinance.setChecked(true);
-                    break;
-                default:
-                    break;
-            }
+            editJobNumber.setText(intent.getStringExtra("data_job_number"));
+            editDepartment.setText(intent.getStringExtra("data_department"));
+//            switch (dep) {
+//                case 0:
+//                    editProduction.setChecked(true);
+//                    break;
+//                case 1:
+//                    editMarket.setChecked(true);
+//                    break;
+//                case 2:
+//                    editLogistics.setChecked(true);
+//                    break;
+//                case 3:
+//                    editFinance.setChecked(true);
+//                    break;
+//                default:
+//                    break;
+//            }
             byte[] bytesOfHeadshot = intent.getByteArrayExtra("data_headshot");
-            photo.setImageBitmap(BitmapFactory.decodeByteArray(bytesOfHeadshot, 0,
-                    bytesOfHeadshot.length));
+            bitmap = BitmapFactory.decodeByteArray(bytesOfHeadshot,0, bytesOfHeadshot.length);
+            photo.setImageBitmap(bitmap);
         }
 
 
@@ -195,30 +200,24 @@ public class PeopleEdit extends AppCompatActivity {
         editEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(PeopleEdit.this, "点击了确定", Toast.LENGTH_SHORT).show();
                 People people = new People();
-                Department dep;
-                if (editProduction.isChecked()){
-                    dep = Department.PRODUCTION;
-                } else if (editMarket.isChecked()){
-                    dep = Department.MARKET;
-                } else if (editLogistics.isChecked()){
-                    dep = Department.LOGISTICS;
-                } else if (editFinance.isChecked()){
-                    dep = Department.FINANCE;
-                } else {
-                    dep = Department.UNKNOWN;
-                }
+
                 people.setName(editName.getText().toString());
                 people.setPosition(editPosition.getText().toString());
                 people.setPhoneNumber(editPhoneNumber.getText().toString());
-                people.setDepartment(Department.departmentToInt(dep));
+                people.setDepartment(editDepartment.getText().toString());
                 people.setHeadshot(People.bitmapToArrayOfByte(bitmap));
+                people.setJobNumber(editJobNumber.getText().toString());
+                Toast.makeText(PeopleEdit.this, editJobNumber.getText().toString()+"", Toast.LENGTH_SHORT).show();
                 //判断是添加人员还是修改人员信息
                 if (forAdd){
+                    people.setStatus(0);
                     people.save();
                     Toast.makeText(PeopleEdit.this, "添加成功", Toast.LENGTH_SHORT).show();
                 } else {
                     int id = intent.getIntExtra("data_id", -1);
+                    people.setStatus(1);
                     people.update(id);
                     if (id > -1){
                         Toast.makeText(PeopleEdit.this, "修改成功", Toast.LENGTH_SHORT).show();

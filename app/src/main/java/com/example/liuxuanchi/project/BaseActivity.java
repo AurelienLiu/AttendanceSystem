@@ -1,4 +1,4 @@
-package com.example.liuxuanchi.project.login;
+package com.example.liuxuanchi.project;
 
 
 import android.content.BroadcastReceiver;
@@ -8,8 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
+import com.example.liuxuanchi.project.login.ActivityCollector;
+import com.example.liuxuanchi.project.login.LoginActivity;
 
 public class BaseActivity extends AppCompatActivity {
 

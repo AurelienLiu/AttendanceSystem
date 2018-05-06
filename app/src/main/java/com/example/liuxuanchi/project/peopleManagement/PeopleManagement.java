@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.People;
@@ -28,7 +29,7 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PeopleManagement extends AppCompatActivity {
+public class PeopleManagement extends BaseActivity {
 
     private List<People> myList = new ArrayList<>();
     private TextView label;
@@ -80,9 +81,13 @@ public class PeopleManagement extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
+        //设置navigationView的点击事件
+        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
+        navView.setCheckedItem(R.id.people_management);
+        MyNavigationView.onSelectItem(navView, PeopleManagement.this, mDrawerLayout);
 
 
         //设置Recycler view
@@ -102,11 +107,6 @@ public class PeopleManagement extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //设置navigationView的点击事件
-        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
-        navView.setCheckedItem(R.id.people_management);
-        MyNavigationView.onSelectItem(navView, PeopleManagement.this, mDrawerLayout);
 
 
     }

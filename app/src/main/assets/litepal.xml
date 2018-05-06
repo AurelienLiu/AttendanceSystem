@@ -19,7 +19,11 @@
 			For example:
     	<version value="1" />
     -->
+<<<<<<< HEAD
     <version value="11" />
+=======
+    <version value="16" />
+>>>>>>> 1b3329da6d02ca70dd139d817b208bfd3a56984c
 
     <!--
     	Define your models in the list with mapping tag, LitePal will

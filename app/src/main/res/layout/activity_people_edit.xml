@@ -32,16 +32,16 @@
                 android:src="@drawable/people_noheadshot"/>
             <Button
                 android:id="@+id/choose_from_album"
-                android:layout_width="60dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_above="@id/take_photo"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/album"/>
             <Button
                 android:id="@+id/take_photo"
-                android:layout_width="60dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="20dp"
@@ -52,8 +52,7 @@
             android:id="@+id/edit_name"
             android:layout_below="@+id/edit_layout"
             android:layout_height="wrap_content"
-            android:layout_width="250dp"
-            android:layout_marginVertical="10dp"
+            android:layout_width="230dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:hint="姓名"/>
@@ -62,28 +61,44 @@
             android:layout_toLeftOf="@id/edit_name"
             android:layout_below="@id/edit_layout"
             android:layout_margin="10dp"
-            android:layout_height="33dp"
-            android:layout_width="33dp"
+            android:layout_height="28dp"
+            android:layout_width="28dp"
             android:src="@drawable/name"/>
+
+        <EditText
+            android:id="@+id/edit_job_number"
+            android:layout_below="@id/edit_name"
+            android:layout_height="wrap_content"
+            android:layout_width="230dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:hint="工号"/>
+
+        <ImageView
+            android:layout_toLeftOf="@id/edit_name"
+            android:layout_below="@id/edit_name"
+            android:layout_margin="10dp"
+            android:layout_height="28dp"
+            android:layout_width="28dp"
+            android:src="@drawable/job_number"/>
 
 
 
         <EditText
             android:id="@+id/edit_position"
-            android:layout_below="@id/edit_name"
+            android:layout_below="@id/edit_job_number"
             android:layout_height="wrap_content"
-            android:layout_width="250dp"
-            android:layout_marginVertical="10dp"
+            android:layout_width="230dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:hint="职位"/>
 
         <ImageView
             android:layout_toLeftOf="@id/edit_name"
-            android:layout_below="@id/edit_name"
+            android:layout_below="@id/edit_job_number"
             android:layout_margin="10dp"
-            android:layout_height="33dp"
-            android:layout_width="33dp"
+            android:layout_height="28dp"
+            android:layout_width="28dp"
             android:src="@drawable/position"/>
 
 
@@ -91,8 +106,7 @@
             android:id="@+id/edit_phone_number"
             android:layout_below="@id/edit_position"
             android:layout_height="wrap_content"
-            android:layout_width="250dp"
-            android:layout_marginVertical="10dp"
+            android:layout_width="230dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:hint="电话"/>
@@ -101,57 +115,78 @@
             android:layout_toLeftOf="@id/edit_name"
             android:layout_below="@id/edit_position"
             android:layout_margin="10dp"
-            android:layout_height="33dp"
-            android:layout_width="33dp"
+            android:layout_height="28dp"
+            android:layout_width="28dp"
             android:src="@drawable/phone"/>
 
-
-        <RadioGroup
-            android:id="@+id/edit_department_group"
-            android:layout_below="@id/edit_phone_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/edit_production"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:layout_marginHorizontal="10dp"
-                android:text="生产"/>
-            <RadioButton
-                android:id="@+id/edit_market"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:textSize="18sp"
-                android:text="市场"/>
-            <RadioButton
-                android:id="@+id/edit_logistics"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:textSize="18sp"
-                android:text="后勤"/>
-            <RadioButton
-                android:id="@+id/edit_finance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:textSize="18sp"
-                android:text="财务"/>
-
-        </RadioGroup>
         <ImageView
-            android:layout_toLeftOf="@id/edit_department_group"
+            android:layout_toLeftOf="@id/edit_department"
             android:layout_below="@id/edit_phone_number"
             android:layout_margin="10dp"
-            android:layout_height="33dp"
-            android:layout_width="33dp"
+            android:layout_height="28dp"
+            android:layout_width="28dp"
             android:src="@drawable/department"/>
+
+        <EditText
+            android:id="@+id/edit_department"
+            android:layout_below="@id/edit_phone_number"
+            android:layout_height="wrap_content"
+            android:layout_width="230dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:hint="部门"/>
+
+        <!--<RadioGroup-->
+            <!--android:id="@+id/edit_department_group"-->
+            <!--android:layout_below="@id/edit_phone_number"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginVertical="10dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<RadioButton-->
+                <!--android:id="@+id/edit_production"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:textSize="15sp"-->
+                <!--android:layout_marginHorizontal="5dp"-->
+                <!--android:text="生产"/>-->
+            <!--<RadioButton-->
+                <!--android:id="@+id/edit_market"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_marginHorizontal="5dp"-->
+                <!--android:textSize="15sp"-->
+                <!--android:text="市场"/>-->
+            <!--<RadioButton-->
+                <!--android:id="@+id/edit_logistics"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_marginHorizontal="5dp"-->
+                <!--android:textSize="15sp"-->
+                <!--android:text="后勤"/>-->
+            <!--<RadioButton-->
+                <!--android:id="@+id/edit_finance"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_marginHorizontal="5dp"-->
+                <!--android:textSize="15sp"-->
+                <!--android:text="财务"/>-->
+
+        <!--</RadioGroup>-->
+
+        <!--<ImageView-->
+            <!--android:layout_toLeftOf="@id/edit_department_group"-->
+            <!--android:layout_below="@id/edit_phone_number"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:layout_width="28dp"-->
+            <!--android:src="@drawable/department"/>-->
 
 
         <Button
@@ -159,8 +194,8 @@
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="40dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
             android:text="确定"
             android:textSize="20sp"/>
 

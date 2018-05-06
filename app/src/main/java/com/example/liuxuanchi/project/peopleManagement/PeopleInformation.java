@@ -20,14 +20,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.util.HttpUtil;
+import com.example.liuxuanchi.project.util.Utility;
 
 import org.litepal.crud.DataSupport;
 
@@ -39,18 +42,31 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class PeopleInformation extends AppCompatActivity {
+public class PeopleInformation extends BaseActivity implements View.OnClickListener{
 
     private TextView label;
     public static String phoneNumber;
     private DrawerLayout mDrawerLayout;
     private List<AttendanceInfo> infoList;
     private ProgressDialog progressDialog;
+    private String name;
+    private AttendanceInfoAdapter adapter;
+    private TextView timeRange;
+    private TextView checkTime;
+    private TextView lateTime;
+    private TextView absenceTime;
+    private int id;
+    private long nowTimeStamp;
+    //考勤信息的列表
+    MyListView attendacneList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_information);
+
+        //获取当前时间时间戳，用于筛选考勤数据
+        nowTimeStamp = System.currentTimeMillis();
 
         final Intent intent = getIntent();
 
@@ -59,17 +75,23 @@ public class PeopleInformation extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
-        String name = intent.getStringExtra("data_name");
+        name = intent.getStringExtra("data_name");
         collapsingToolbarLayout.setTitle(name);
+        id = intent.getIntExtra("data_id", -1);
+        Toast.makeText(PeopleInformation.this, "name=" + name + "id=" + id, Toast.LENGTH_SHORT).show();
 
         //设置DrawerLayout
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
         }
 
+        //设置navigationView的点击事件
+        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
+        navView.setCheckedItem(R.id.people_management);
+        MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
         //电话呼叫联系人
         phoneNumber = intent.getStringExtra("data_phone_number");
@@ -100,71 +122,99 @@ public class PeopleInformation extends AppCompatActivity {
 //        peopleImage.setImageResource(PeopleAdapter.setPeopleImage(Department.intToDepartment(dep)));
         peopleImage.setImageBitmap(BitmapFactory.decodeByteArray(byteOfHeadshot, 0, byteOfHeadshot.length));
 
-        peopleId.setText("id： " + intent.getIntExtra("data_id", -1));
+        peopleId.setText("工号： " + intent.getStringExtra("data_job_number"));
         peoplePosition.setText(intent.getStringExtra("data_position"));
-        peopleDepartment.setText(Department.intToHanzi(intent.getIntExtra
-                ("data_department", -1)));
+//        peopleDepartment.setText(Department.intToHanzi(intent.getIntExtra
+//                ("data_department", -1)));
+        peopleDepartment.setText(intent.getStringExtra("data_department"));
 
-        //设置navigationView的点击事件
-        NavigationView navView = (NavigationView)findViewById(R.id.nav_view);
-        navView.setCheckedItem(R.id.people_management);
-        MyNavigationView.onSelectItem(navView, PeopleInformation.this, mDrawerLayout);
 
-        //自动更新该人员签到历史信息
-        String address = "http://10.0.2.2/fahuichu.json";
-        queryFromServer(address);
+//        //自动更新该人员签到历史信息
+//        String address = "http://10.0.2.2/fahuichu.json";
+//        queryFromServer(address);
 
+
+        /**
+         * 周、月、总三个按钮
+         */
+        timeRange = (TextView)findViewById(R.id.time_range);
+        checkTime = (TextView)findViewById(R.id.check_time);
+        lateTime = (TextView)findViewById(R.id.late_time);
+        absenceTime = (TextView)findViewById(R.id.absence_time);
+        Button weekButton = (Button)findViewById(R.id.week_range);
+        Button monthButton = (Button)findViewById(R.id.month_range);
+        Button allButton = (Button)findViewById(R.id.all_range);
+        weekButton.setOnClickListener(this);
+        monthButton.setOnClickListener(this);
+        allButton.setOnClickListener(this);
 
         //将考勤信息填入attendance content里面
-//        StringBuilder builder = new StringBuilder();
-//        builder.append("在这里看到他近期的考勤情况" + "\n");
-//        for(int i = 0; i < 500; i++) {
-//            builder.append("12345");
-//        }
-//        String content = builder.toString();
-//        TextView attendanceContent = (TextView)findViewById(R.id.attendance_content);
-//        attendanceContent.setText(content);
 
         infoList = new ArrayList<>();
-        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
-        //initInfoList(name);
-        AttendanceInfoAdapter adapter = new AttendanceInfoAdapter(PeopleInformation.this,
+        long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
+        //通过AttendanceInfo里的peopleId匹配对应的考勤数据
+        infoList = DataSupport.where("peopleId=?", ""+id)
+                .where("date>?", "" + (nowTimeStamp - oneWeek))
+                .order("date desc")
+                .find(AttendanceInfo.class);
+        adapter = new AttendanceInfoAdapter(PeopleInformation.this,
                 R.layout.attendance_info_item, infoList);
-        MyListView attendacneList = (MyListView)findViewById(R.id.attendance_list);
+        attendacneList = (MyListView)findViewById(R.id.attendance_list);
         attendacneList.setAdapter(adapter);
+        checkTime.setText(infoList.size() + "");
+
+        //计算缺勤次数
+        int absence = 0;
+        int lateOrEarly = 0;
+        for (AttendanceInfo info : infoList) {
+            if (info.isAbsence()) {
+                absence++;
+            } else {
+                if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                    lateOrEarly++;
+                }
+            }
+        }
+        absenceTime.setText(absence + "");
+        lateTime.setText(lateOrEarly + "");
+
+
     }
 
-    private void queryFromServer(String address) {
-        showProgressDialog();
-        HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //通过runOnUiThread()方法回到主线程处理逻辑
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(PeopleInformation.this, "数据更新失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().toString();
-                boolean result = false;
-                Log.d("PeopleInfo.class", "onResponse: " + responseText);
+//    private void queryFromServer(String address) {
+//        showProgressDialog();
+//        HttpUtil.sendOkHttpRequest(address, new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                //通过runOnUiThread()方法回到主线程处理逻辑
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        closeProgressDialog();
+//                        Toast.makeText(PeopleInformation.this, "数据更新失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String responseText = response.body().string();
+//                boolean result = false;
+//                Log.d("PeopleInfo.class", "onResponse: " + responseText);
 //                result = Utility.handlerOnePersonAttendanceInfo(responseText);
-                closeProgressDialog();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(PeopleInformation.this, "数据更新成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-    }
+//                closeProgressDialog();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        infoList.clear();
+//                        infoList = DataSupport.where("name=?", name).find(AttendanceInfo.class);
+//                        adapter.notifyDataSetChanged();
+//                        Toast.makeText(PeopleInformation.this, "更新成功", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     /**
      * 显示进度对话框
@@ -187,38 +237,6 @@ public class PeopleInformation extends AppCompatActivity {
         }
     }
 
-    private void initInfoList(String name) {
-        AttendanceInfo info1 = new AttendanceInfo();
-        info1.setName(name);
-        info1.setDate("2018-2-5");
-        info1.setAbsence(false);
-        info1.setLateTime(-10);
-        info1.setLeaveEarlyTime(-5);
-        info1.setTimeRange("7:50AM----5:05PM");
-
-        AttendanceInfo info2 = new AttendanceInfo();
-        info2.setName(name);
-        info2.setDate("2018-2-4");
-        info2.setAbsence(true);
-        info2.setLateTime(-10);
-        info2.setLeaveEarlyTime(-5);
-        info2.setTimeRange("");
-
-        AttendanceInfo info3 = new AttendanceInfo();
-        info3.setName(name);
-        info3.setDate("2018-2-3");
-        info3.setAbsence(false);
-        info3.setLateTime(10);
-        info3.setLeaveEarlyTime(-5);
-        info3.setTimeRange("8:10AM----5:05PM");
-        for (int i = 0; i < 10; i++) {
-            infoList.add(info2);
-            infoList.add(info1);
-            infoList.add(info3);
-        }
-
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -269,6 +287,85 @@ public class PeopleInformation extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.week_range:
+                long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
+                timeRange.setText("本周");
+                infoList.clear();
+                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
+                        .where("date>?", "" + (nowTimeStamp - oneWeek))
+                        .order("date desc")
+                        .find(AttendanceInfo.class));
+                adapter.notifyDataSetChanged();
+                checkTime.setText(infoList.size() + "");
+                //计算缺勤次数
+                int absence1 = 0;
+                int lateOrEarly1 = 0;
+                for (AttendanceInfo info : infoList) {
+                    if (info.isAbsence()) {
+                        absence1++;
+                    } else {
+                        if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                            lateOrEarly1++;
+                        }
+                    }
+                }
+                absenceTime.setText(absence1 + "");
+                lateTime.setText(lateOrEarly1 + "");
+                break;
+            case R.id.month_range:
+                long oneMonth = (long)30 * 24 * 60 * 60 * 1000;  //一周的毫秒数
+                timeRange.setText("本月");
+                infoList.clear();
+                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
+                        .where("date>?", "" + (nowTimeStamp - oneMonth))
+                        .order("date desc")
+                        .find(AttendanceInfo.class));
+                adapter.notifyDataSetChanged();
+                String t = infoList.size() + "";
+                checkTime.setText(t);
+                //计算缺勤次数
+                int absence2 = 0;
+                int lateOrEarly2 = 0;
+                for (AttendanceInfo info : infoList) {
+                    if (info.isAbsence()) {
+                        absence2++;
+                    } else {
+                        if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                            lateOrEarly2++;
+                        }
+                    }
+                }
+                absenceTime.setText(absence2 + "");
+                lateTime.setText(lateOrEarly2 + "");
+                break;
+            case R.id.all_range:
+                timeRange.setText("总");
+                infoList.clear();
+                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
+                        .order("date desc")
+                        .find(AttendanceInfo.class));
+                adapter.notifyDataSetChanged();
+                checkTime.setText(infoList.size() + "");
+                //计算缺勤次数
+                int absence3 = 0;
+                int lateOrEarly3 = 0;
+                for (AttendanceInfo info : infoList) {
+                    if (info.isAbsence()) {
+                        absence3++;
+                    } else {
+                        if(Utility.isLateOrGoEarly(PeopleInformation.this, info.getDate())){
+                            lateOrEarly3++;
+                        }
+                    }
+                }
+                absenceTime.setText(absence3 + "");
+                lateTime.setText(lateOrEarly3 + "");
+                break;
+            default:
+                break;
+        }
+    }
 }

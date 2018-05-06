@@ -13,21 +13,17 @@ import java.io.ByteArrayOutputStream;
 public class People extends DataSupport{
     private String name;
     private int id;
-    private int department;
+//    private int department;
+    private String department;
     private int level;
     private String position;
     private String phoneNumber;
     private byte[] headshot;
-    //状态戳 -1表示待删除 0表示新增 1表示更改 9表示已更新
+    private String jobNumber;
+    //时间戳，表示最近一次成功同步的时间
+    private long timeStamp;
+    //状态戳 -1表示待删除 0表示新增 1表示已更改 9表示已同步
     private int status;
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     public long getTimeStamp() {
         return timeStamp;
@@ -37,8 +33,13 @@ public class People extends DataSupport{
         this.timeStamp = timeStamp;
     }
 
-    //时间戳 表示最近一次数据更新时间
-    private  long timeStamp;
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public People(){
 
@@ -48,12 +49,6 @@ public class People extends DataSupport{
         this.name = name;
     }
 
-    public People(String name, int id, int departement, int level){
-        this.name = name;
-        this.id = id;
-        this.department = departement;
-        this.level = level;
-    }
 
     public String getName() {
         return name;
@@ -71,11 +66,11 @@ public class People extends DataSupport{
         this.id = id;
     }
 
-    public int getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(int department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
@@ -117,6 +112,11 @@ public class People extends DataSupport{
         return byteArrayOutputStream.toByteArray();
     }
 
+    public String getJobNumber() {
+        return jobNumber;
+    }
 
-
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
 }
