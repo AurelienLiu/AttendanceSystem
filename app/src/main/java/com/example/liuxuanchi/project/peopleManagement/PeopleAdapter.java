@@ -167,6 +167,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         return holder;
     }
 
+    //将人员信息打包装入intent
     private void putInfoToIntent(Intent intent, People people) {
         intent.putExtra("data_id",people.getId());
         intent.putExtra("data_name", people.getName());
@@ -181,6 +182,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         People people = myPeopleList.get(position);
         //holder.peopleImage.setImageResource(setPeopleImage(Department.intToDepartment(people.getDepartment())));
+        //设置头像和姓名
         holder.peopleImage.setImageBitmap(BitmapFactory.decodeByteArray(people.getHeadshot(),
                 0, people.getHeadshot().length));
         holder.peopleName.setText(people.getName());

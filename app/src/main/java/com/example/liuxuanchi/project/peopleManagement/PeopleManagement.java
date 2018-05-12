@@ -46,24 +46,24 @@ public class PeopleManagement extends BaseActivity {
         setContentView(R.layout.activity_people_management);
 
 
-
-        //根据排序模式生成list
-        SharedPreferences pref = getSharedPreferences("order_way", MODE_PRIVATE);
-        orderWay = pref.getInt("order_way", ORDER_BY_ID);
-        if (orderWay == ORDER_BY_DEP) {
-            List<People> myList0 = DataSupport.where("department = ?", "0").find(People.class);
-            myList.addAll(myList0);
-            List<People> myList1 = DataSupport.where("department = ?", "1").find(People.class);
-            myList.addAll(myList1);
-            List<People> myList2 = DataSupport.where("department = ?", "2").find(People.class);
-            myList.addAll(myList2);
-            List<People> myList3 = DataSupport.where("department = ?", "3").find(People.class);
-            myList.addAll(myList3);
-            List<People> myList4 = DataSupport.where("department = ?", "-1").find(People.class);
-            myList.addAll(myList4);
-        } else {
-            myList = DataSupport.findAll(People.class);
-        }
+//
+//        //根据排序模式生成list
+//        SharedPreferences pref = getSharedPreferences("order_way", MODE_PRIVATE);
+//        orderWay = pref.getInt("order_way", ORDER_BY_ID);
+//        if (orderWay == ORDER_BY_DEP) {
+//            List<People> myList0 = DataSupport.where("department = ?", "0").find(People.class);
+//            myList.addAll(myList0);
+//            List<People> myList1 = DataSupport.where("department = ?", "1").find(People.class);
+//            myList.addAll(myList1);
+//            List<People> myList2 = DataSupport.where("department = ?", "2").find(People.class);
+//            myList.addAll(myList2);
+//            List<People> myList3 = DataSupport.where("department = ?", "3").find(People.class);
+//            myList.addAll(myList3);
+//            List<People> myList4 = DataSupport.where("department = ?", "-1").find(People.class);
+//            myList.addAll(myList4);
+//        } else {
+//            myList = DataSupport.findAll(People.class);
+//        }
 
 
         //设置label
@@ -90,7 +90,7 @@ public class PeopleManagement extends BaseActivity {
         MyNavigationView.onSelectItem(navView, PeopleManagement.this, mDrawerLayout);
 
 
-        //设置Recycler view
+        //设置RecyclerView
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -118,6 +118,7 @@ public class PeopleManagement extends BaseActivity {
         final SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView)menu.findItem(R.id.toolbar_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //将获取到的搜索框绑定一个查询监听器 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -127,49 +128,50 @@ public class PeopleManagement extends BaseActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 String queryText = searchView.getQuery().toString();
+                //若为空则显示所有人，若不为空则查找搜索包含这一字符串的姓名的人员 
                 if ("".equals(queryText)) {
                     myList = DataSupport.findAll(People.class);
                 } else {
                     myList.clear();
                     myList = DataSupport.where("name like ?", "%" + queryText + "%").find(People.class);
                 }
+                //查找结束后将新的人员列表显示在列表中
                 adapter = new PeopleAdapter(myList);
                 recyclerView.setAdapter(adapter);
                 return false;
             }
-
         });
 
         return true;
     }
-    //设置toolbar菜单中的点击事件
 
+    //设置toolbar菜单中的点击事件
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
-            case R.id.toolbar_order_by_id:
-                if (orderWay == ORDER_BY_DEP) {
-                    SharedPreferences.Editor editor = getSharedPreferences("order_way", MODE_PRIVATE).edit();
-                    editor.putInt("order_way", ORDER_BY_ID);
-                    editor.apply();
-                    finish();
-                    Intent intent1 = new Intent(PeopleManagement.this, PeopleManagement.class);
-                    startActivity(intent1);
-                }
-                break;
-            case R.id.toolbar_order_by_dep:
-                if (orderWay == ORDER_BY_ID) {
-                    SharedPreferences.Editor editor = getSharedPreferences("order_way", MODE_PRIVATE).edit();
-                    editor.putInt("order_way", ORDER_BY_DEP);
-                    editor.apply();
-                    finish();
-                    Intent intent1 = new Intent(PeopleManagement.this, PeopleManagement.class);
-                    startActivity(intent1);
-                }
-                break;
+//            case R.id.toolbar_order_by_id:
+//                if (orderWay == ORDER_BY_DEP) {
+//                    SharedPreferences.Editor editor = getSharedPreferences("order_way", MODE_PRIVATE).edit();
+//                    editor.putInt("order_way", ORDER_BY_ID);
+//                    editor.apply();
+//                    finish();
+//                    Intent intent1 = new Intent(PeopleManagement.this, PeopleManagement.class);
+//                    startActivity(intent1);
+//                }
+//                break;
+//            case R.id.toolbar_order_by_dep:
+//                if (orderWay == ORDER_BY_ID) {
+//                    SharedPreferences.Editor editor = getSharedPreferences("order_way", MODE_PRIVATE).edit();
+//                    editor.putInt("order_way", ORDER_BY_DEP);
+//                    editor.apply();
+//                    finish();
+//                    Intent intent1 = new Intent(PeopleManagement.this, PeopleManagement.class);
+//                    startActivity(intent1);
+//                }
+//                break;
             default:
                 break;
         }
