@@ -14,15 +14,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.SettingActivity;
 import com.example.liuxuanchi.project.db.ReachedInfoLitepal;
 import com.example.liuxuanchi.project.login.LoginActivity;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
+import com.example.liuxuanchi.project.util.Utility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -37,7 +41,10 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.litepal.crud.DataSupport;
@@ -53,6 +60,11 @@ public class StatisticsActivity extends BaseActivity {
     private BarChart mBarChart;
     private DrawerLayout mDrawerLayout;
     private List<ReachedInfoLitepal> infoList = new ArrayList<>();
+
+    public static int choseYear;
+    public static int choseMonth;
+    public static int choseDay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +207,20 @@ public class StatisticsActivity extends BaseActivity {
         InfoAdapter infoAdapter = new InfoAdapter(infoList);
         recyclerView.setAdapter(infoAdapter);
 
+        /**
+         * 后添加：点击中心日期文字来更换查看日期
+         */
+        Button changeDate = (Button)findViewById(R.id.statistics_change_date);
+        changeDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.showDatePickerDialog(StatisticsActivity.this, 1, mPieChart, Calendar.getInstance());
+            }
+        });
+
+
+        /**************************************************************/
+
 
     }
 
@@ -225,7 +251,7 @@ public class StatisticsActivity extends BaseActivity {
     }
 
     //piechart处理，将图表与数据关联
-    private void showChart(PieChart pieChart, PieData pieData){
+    private void showChart(final PieChart pieChart, PieData pieData){
         pieChart.setHoleRadius(60f);//半径
         pieChart.setTransparentCircleRadius(60f);//半透明圈
         pieChart.setDrawCenterText(true);//饼状图中间可以添加文字
@@ -258,6 +284,8 @@ public class StatisticsActivity extends BaseActivity {
         pieChart.setCenterText(month + "月/" + date.get(Calendar.DATE)+ "日");
         pieChart.setCenterTextSize(30);
         //pieChart.setCenterTextTypeface();字体样式
+
+
 
         pieChart.getDescription().setEnabled(false);
 
@@ -309,4 +337,16 @@ public class StatisticsActivity extends BaseActivity {
         PieData pieData = new PieData(pieDataSet);
         return pieData;
     }
+
+    /**
+     * 改变日期后执行更改日期、数据等一系列操作
+     * 选择的年份为choseYear、choseMonth、choseDay
+     */
+    public static void changeStatisticsByDate(PieChart pieChart){
+        Log.d("111111", "changeStatisticsByDate: "+ choseYear + "    " + choseMonth + choseDay);
+        pieChart.setCenterText(choseMonth + "月/" + choseDay + "日");
+
+    }
+
+
 }

@@ -45,6 +45,8 @@ public class PeopleManagement extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_management);
 
+        myList = DataSupport.where("status>?", "-1").find(People.class);
+
 
 //
 //        //根据排序模式生成list
@@ -133,7 +135,7 @@ public class PeopleManagement extends BaseActivity {
                     myList = DataSupport.findAll(People.class);
                 } else {
                     myList.clear();
-                    myList = DataSupport.where("name like ?", "%" + queryText + "%").find(People.class);
+                    myList = DataSupport.where("name like ?", "%" + queryText + "%").where("status>?", "-1").find(People.class);
                 }
                 //查找结束后将新的人员列表显示在列表中
                 adapter = new PeopleAdapter(myList);
