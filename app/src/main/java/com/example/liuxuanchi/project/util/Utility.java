@@ -1,16 +1,25 @@
 package com.example.liuxuanchi.project.util;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.db.People;
 import com.example.liuxuanchi.project.peopleManagement.PeopleInformation;
+import com.example.liuxuanchi.project.statistics.statistics.StatisticsActivity;
+import com.github.mikephil.charting.charts.PieChart;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -20,6 +29,7 @@ import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -188,4 +198,52 @@ public class Utility {
             }
         }
     }
+
+    public static void showDatePickerDialog(final Activity activity, int themeResId, final PieChart pieChart, Calendar calendar) {
+        // Calendar c = Calendar.getInstance();
+        // 创建一个TimePickerDialog实例，并把它显示出来
+        // 解释一哈，Activity是context的子类
+        new DatePickerDialog(activity, themeResId,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        StatisticsActivity.choseYear = year;
+                        StatisticsActivity.choseMonth = month + 1;//月份是从0-11
+                        StatisticsActivity.choseDay = dayOfMonth;
+                        StatisticsActivity.changeStatisticsByDate(pieChart);
+                    }
+                }
+                , calendar.get(Calendar.YEAR)
+                , calendar.get(Calendar.MONTH)
+                , calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public static void showTimePickerDialog(final Activity activity, int themeResId, final TextView tv, Calendar calendar) {
+        // Calendar c = Calendar.getInstance();
+        // 创建一个TimePickerDialog实例，并把它显示出来
+        // 解释一哈，Activity是context的子类
+        new TimePickerDialog( activity,themeResId,
+                // 绑定监听器
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        tv.setText( hourOfDay + "时" + minute  + "分");
+                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(activity).edit();
+                        if (tv.getId() == R.id.time1) {
+                            editor.putInt("hour1", hourOfDay);
+                            editor.putInt("minute1", minute);
+                        } else {
+                            editor.putInt("hour2", hourOfDay);
+                            editor.putInt("minute2", minute);
+                        }
+                        editor.apply();
+                    }
+                }
+                // 设置初始时间
+                , calendar.get(Calendar.HOUR_OF_DAY)
+                , calendar.get(Calendar.MINUTE)
+                // true表示采用24小时制
+                ,true).show();
+    }
+
 }

@@ -94,7 +94,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                         builder1.setPositiveButton("确认删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                people.delete();
+//                                people.delete();
+                                //将人员的status改为-1
+                                int id = people.getId();
+                                People newPeople = new People();
+                                newPeople.setStatus(-1);
+                                newPeople.update(id);
                                 Intent intent = new Intent(parent.getContext(), PeopleManagement.class);
                                 parent.getContext().startActivity(intent);
                             }
@@ -167,6 +172,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         return holder;
     }
 
+    //将人员信息打包装入intent
     private void putInfoToIntent(Intent intent, People people) {
         intent.putExtra("data_id",people.getId());
         intent.putExtra("data_name", people.getName());
@@ -181,6 +187,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         People people = myPeopleList.get(position);
         //holder.peopleImage.setImageResource(setPeopleImage(Department.intToDepartment(people.getDepartment())));
+        //设置头像和姓名
         holder.peopleImage.setImageBitmap(BitmapFactory.decodeByteArray(people.getHeadshot(),
                 0, people.getHeadshot().length));
         holder.peopleName.setText(people.getName());

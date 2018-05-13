@@ -42,7 +42,7 @@ public class MyNavigationView extends NavigationView {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.attendance_record:
-                        Toast.makeText(context, "跳转到考勤记录界面", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "跳转到考勤记录界面", Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawers();
                         if (context.getClass() != StatisticsActivity.class) {
                             Intent intent = new Intent(context, StatisticsActivity.class);

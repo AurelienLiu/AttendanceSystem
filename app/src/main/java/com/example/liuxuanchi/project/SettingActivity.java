@@ -1,6 +1,7 @@
 package com.example.liuxuanchi.project;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -135,13 +137,17 @@ public class SettingActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SettingActivity.this, "人员信息更新上传失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SettingActivity.this, "人员信息更新上传成功", Toast.LENGTH_SHORT).show();
                             }
                         });
+                        //在本地库中删除status为-1的人员
+                        DataSupport.deleteAll(People.class, "status < ", "0");
+                        //将剩余所以人员的更新时间戳设为现在的时间，状态戳设为9（已同步）
                         People people = new People();
                         people.setTimeStamp(System.currentTimeMillis());
                         people.setStatus(9);
                         people.updateAll("status < ?", "9");
+
 
                     }
                 }, requestBody);
@@ -168,7 +174,7 @@ public class SettingActivity extends BaseActivity {
                         AttendanceInfo info = new AttendanceInfo(1, "冯涛", (long)time - oneDay * i, false, time);
                         info.save();
                     }
-                    Log.d("111111111", "" + (oneDay * i));
+//                    Log.d("111111111", "" + (oneDay * i));
                 }
                 for (int i = 0; i < 40; i++) {
                     if (i % 6 == 0) {
@@ -191,7 +197,7 @@ public class SettingActivity extends BaseActivity {
         chooseTime1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePickerDialog(SettingActivity.this,2 , time1, Calendar.getInstance());
+                Utility.showTimePickerDialog(SettingActivity.this,2 , time1, Calendar.getInstance());
             }
         });
         Button chooseTime2 = (Button)findViewById(R.id.choose_time2);
@@ -199,7 +205,7 @@ public class SettingActivity extends BaseActivity {
         chooseTime2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePickerDialog(SettingActivity.this,2 , time2, Calendar.getInstance());
+                Utility.showTimePickerDialog(SettingActivity.this,2 , time2, Calendar.getInstance());
             }
         });
         //将之前定好的时间填入TextView
@@ -243,31 +249,5 @@ public class SettingActivity extends BaseActivity {
         return true;
     }
 
-    public static void showTimePickerDialog(final Activity activity, int themeResId, final TextView tv, Calendar calendar) {
-        // Calendar c = Calendar.getInstance();
-        // 创建一个TimePickerDialog实例，并把它显示出来
-        // 解释一哈，Activity是context的子类
-        new TimePickerDialog( activity,themeResId,
-                // 绑定监听器
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        tv.setText( hourOfDay + "时" + minute  + "分");
-                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(activity).edit();
-                        if (tv.getId() == R.id.time1) {
-                            editor.putInt("hour1", hourOfDay);
-                            editor.putInt("minute1", minute);
-                        } else {
-                            editor.putInt("hour2", hourOfDay);
-                            editor.putInt("minute2", minute);
-                        }
-                        editor.apply();
-                    }
-                }
-                // 设置初始时间
-                , calendar.get(Calendar.HOUR_OF_DAY)
-                , calendar.get(Calendar.MINUTE)
-                // true表示采用24小时制
-                ,true).show();
-    }
+
 }
