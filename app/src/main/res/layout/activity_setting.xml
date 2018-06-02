@@ -24,7 +24,13 @@
             android:id="@+id/update_attendacne_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="update attendance info"/>
+            android:text="更新考勤信息"/>
+
+        <Button
+            android:id="@+id/update_people_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="更新人员信息"/>
 
         <Button
             android:id="@+id/post_people_info"

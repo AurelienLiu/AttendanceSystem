@@ -8,14 +8,4 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/toolbar_order_by_id"
-        android:title="按工号排序"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/toolbar_order_by_dep"
-        android:title="按部门排序"
-        app:showAsAction="never"/>
-
-
 </menu>

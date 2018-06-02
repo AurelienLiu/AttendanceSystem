@@ -23,8 +23,12 @@ import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.SettingActivity;
+import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.db.ReachedInfoLitepal;
 import com.example.liuxuanchi.project.login.LoginActivity;
+import com.example.liuxuanchi.project.peopleManagement.AttendanceInfoAdapter;
+import com.example.liuxuanchi.project.peopleManagement.MyListView;
+import com.example.liuxuanchi.project.peopleManagement.PeopleInformation;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 import com.example.liuxuanchi.project.util.Utility;
 import com.github.mikephil.charting.charts.BarChart;
@@ -59,17 +63,24 @@ public class StatisticsActivity extends BaseActivity {
     private PieChart mPieChart;
     private BarChart mBarChart;
     private DrawerLayout mDrawerLayout;
-    private List<ReachedInfoLitepal> infoList = new ArrayList<>();
+//    private List<ReachedInfoLitepal> infoList = new ArrayList<>();
 
     public static int choseYear;
     public static int choseMonth;
     public static int choseDay;
+
+    MyListView attendacneList;
+    private static AttendanceInfoAdapter adapter1;
+    private static List<AttendanceInfo> infoList1;
+    private static long choseDate;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.avtivity_statistics);
+
+        choseDate = System.currentTimeMillis() - (getHourOfToday() + 1) * 60 * 60 * 1000;
 
 
         //饼图
@@ -199,13 +210,13 @@ public class StatisticsActivity extends BaseActivity {
 
 
         //recyclerView
-        infoList = DataSupport.where("arriveInTime = ?", "0").find(ReachedInfoLitepal.class);
-
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        InfoAdapter infoAdapter = new InfoAdapter(infoList);
-        recyclerView.setAdapter(infoAdapter);
+//        infoList = DataSupport.where("arriveInTime = ?", "0").find(ReachedInfoLitepal.class);
+//
+//        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(layoutManager);
+//        InfoAdapter infoAdapter = new InfoAdapter(infoList);
+//        recyclerView.setAdapter(infoAdapter);
 
         /**
          * 后添加：点击中心日期文字来更换查看日期
@@ -221,7 +232,77 @@ public class StatisticsActivity extends BaseActivity {
 
         /**************************************************************/
 
+        /**
+         * 后添加：考勤列表
+         */
 
+        infoList1 = new ArrayList<>();
+        //通过AttendanceInfo里的peopleId匹配对应的考勤数据,匹配24小时内数据
+        infoList1 = DataSupport
+                .where("date>?", "" + choseDate)
+                .order("date desc")
+                .find(AttendanceInfo.class);
+        adapter1 = new AttendanceInfoAdapter(StatisticsActivity.this,
+                R.layout.attendance_info_item, infoList1);
+        attendacneList = (MyListView)findViewById(R.id.attendance_list);
+        attendacneList.setAdapter(adapter1);
+
+        /****************************/
+    }
+
+    private int getHourOfToday() {
+        String hour = Utility.stampToDate(System.currentTimeMillis(), "HH");
+        if ("00".equals(hour)) {
+            return 0;
+        } else if ("01".equals(hour)) {
+            return 1;
+        } else if ("02".equals(hour)) {
+            return 2;
+        } else if ("03".equals(hour)) {
+            return 3;
+        } else if ("04".equals(hour)) {
+            return 4;
+        } else if ("05".equals(hour)) {
+            return 5;
+        } else if ("06".equals(hour)) {
+            return 6;
+        } else if ("07".equals(hour)) {
+            return 7;
+        } else if ("08".equals(hour)) {
+            return 8;
+        } else if ("09".equals(hour)) {
+            return 9;
+        } else if ("10".equals(hour)) {
+            return 10;
+        } else if ("11".equals(hour)) {
+            return 11;
+        } else if ("12".equals(hour)) {
+            return 12;
+        } else if ("13".equals(hour)) {
+            return 13;
+        } else if ("14".equals(hour)) {
+            return 14;
+        } else if ("15".equals(hour)) {
+            return 15;
+        } else if ("16".equals(hour)) {
+            return 16;
+        } else if ("17".equals(hour)) {
+            return 17;
+        } else if ("18".equals(hour)) {
+            return 18;
+        } else if ("19".equals(hour)) {
+            return 19;
+        } else if ("20".equals(hour)) {
+            return 20;
+        } else if ("21".equals(hour)) {
+            return 21;
+        } else if ("22".equals(hour)) {
+            return 22;
+        } else if ("23".equals(hour)) {
+            return 23;
+        } else {
+            return 0;
+        }
     }
 
     //柱状图的x轴格式（String类）
@@ -345,6 +426,18 @@ public class StatisticsActivity extends BaseActivity {
     public static void changeStatisticsByDate(PieChart pieChart){
         Log.d("111111", "changeStatisticsByDate: "+ choseYear + "    " + choseMonth + choseDay);
         pieChart.setCenterText(choseMonth + "月/" + choseDay + "日");
+
+        choseDate = Utility.dateToTimeStamp("2018-" + choseMonth + "-" + choseDay + " 00:00:00");
+        updateList(choseDate);
+    }
+
+    private static void updateList(long choseDate) {
+        infoList1.clear();
+        infoList1.addAll(DataSupport
+                .where("date>? AND date<?", "" + choseDate, "" + (choseDate + 24 * 60 * 60 * 1000))
+                .order("date asc")
+                .find(AttendanceInfo.class));
+        adapter1.notifyDataSetChanged();
 
     }
 
