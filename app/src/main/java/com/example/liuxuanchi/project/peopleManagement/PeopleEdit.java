@@ -158,6 +158,7 @@ public class PeopleEdit extends AppCompatActivity {
         final EditText editPosition = (EditText)findViewById(R.id.edit_position);
         final EditText editPhoneNumber = (EditText)findViewById(R.id.edit_phone_number);
         final EditText editJobNumber = (EditText)findViewById(R.id.edit_job_number);
+
         //如果从添加按钮进入，则添加默认头像
         if (forAdd) {
             Toast.makeText(PeopleEdit.this, "添加默认头像", Toast.LENGTH_SHORT).show();
@@ -170,22 +171,6 @@ public class PeopleEdit extends AppCompatActivity {
             editPhoneNumber.setText(intent.getStringExtra("data_phone_number"));
             editJobNumber.setText(intent.getStringExtra("data_job_number"));
             editDepartment.setText(intent.getStringExtra("data_department"));
-//            switch (dep) {
-//                case 0:
-//                    editProduction.setChecked(true);
-//                    break;
-//                case 1:
-//                    editMarket.setChecked(true);
-//                    break;
-//                case 2:
-//                    editLogistics.setChecked(true);
-//                    break;
-//                case 3:
-//                    editFinance.setChecked(true);
-//                    break;
-//                default:
-//                    break;
-//            }
             byte[] bytesOfHeadshot = intent.getByteArrayExtra("data_headshot");
             bitmap = BitmapFactory.decodeByteArray(bytesOfHeadshot,0, bytesOfHeadshot.length);
             photo.setImageBitmap(bitmap);
@@ -200,16 +185,13 @@ public class PeopleEdit extends AppCompatActivity {
         editEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PeopleEdit.this, "点击了确定", Toast.LENGTH_SHORT).show();
                 People people = new People();
-
                 people.setName(editName.getText().toString());
                 people.setPosition(editPosition.getText().toString());
                 people.setPhoneNumber(editPhoneNumber.getText().toString());
                 people.setDepartment(editDepartment.getText().toString());
                 people.setHeadshot(People.bitmapToArrayOfByte(bitmap));
                 people.setJobNumber(editJobNumber.getText().toString());
-                Toast.makeText(PeopleEdit.this, editJobNumber.getText().toString()+"", Toast.LENGTH_SHORT).show();
                 //判断是添加人员还是修改人员信息
                 if (forAdd){
                     people.setStatus(0);
@@ -244,14 +226,6 @@ public class PeopleEdit extends AppCompatActivity {
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     try {
-                        //将拍摄的照片进行剪裁
-//                        try {
-//                            //将剪裁后的照片显示出来
-//                            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(photoUri));
-//                            photo.setImageBitmap(bitmap);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
                         Crop.of(photoUri, finalUri).asSquare().start(PeopleEdit.this);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -284,6 +258,7 @@ public class PeopleEdit extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(intent, CHOOSE_FROM_ALBUM);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

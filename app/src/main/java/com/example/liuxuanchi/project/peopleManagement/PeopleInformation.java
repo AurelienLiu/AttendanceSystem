@@ -153,8 +153,8 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
         infoList = new ArrayList<>();
         long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
         //通过AttendanceInfo里的peopleId匹配对应的考勤数据
-        infoList = DataSupport.where("peopleId=?", ""+id)
-                .where("date>?", "" + (nowTimeStamp - oneWeek))
+        infoList = DataSupport
+                .where("date>? AND peopleId=?", "" + (nowTimeStamp - oneWeek),  ""+id)
                 .order("date desc")
                 .find(AttendanceInfo.class);
         adapter = new AttendanceInfoAdapter(PeopleInformation.this,
@@ -294,8 +294,8 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
                 long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
                 timeRange.setText("本周");
                 infoList.clear();
-                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
-                        .where("date>?", "" + (nowTimeStamp - oneWeek))
+                infoList.addAll(DataSupport
+                        .where("date>? AND peopleId=?", "" + (nowTimeStamp - oneWeek), "" + id)
                         .order("date desc")
                         .find(AttendanceInfo.class));
                 adapter.notifyDataSetChanged();
@@ -319,8 +319,8 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
                 long oneMonth = (long)30 * 24 * 60 * 60 * 1000;  //一周的毫秒数
                 timeRange.setText("本月");
                 infoList.clear();
-                infoList.addAll(DataSupport.where("peopleId=?", "" + id)
-                        .where("date>?", "" + (nowTimeStamp - oneMonth))
+                infoList.addAll(DataSupport
+                        .where("date>? AND peopleId=?", "" + (nowTimeStamp - oneMonth), "" + id)
                         .order("date desc")
                         .find(AttendanceInfo.class));
                 adapter.notifyDataSetChanged();
