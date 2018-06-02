@@ -10,11 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
+import com.example.liuxuanchi.project.db.People;
 import com.example.liuxuanchi.project.util.Utility;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -36,8 +40,13 @@ public class AttendanceInfoAdapter extends ArrayAdapter<AttendanceInfo> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         AttendanceInfo info = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
+        TextView nameView = (TextView)view.findViewById(R.id.att_name);
+        nameView.setText(info.getName());
+        TextView jobNumView = (TextView)view.findViewById(R.id.att_job_number);
+        People people = DataSupport.find(People.class, info.getPeopleId());
+        jobNumView.setText(people.getJobNumber());
         TextView dateView = (TextView)view.findViewById(R.id.att_date);
-        FrameLayout layout = (FrameLayout)view.findViewById(R.id.att_layout);
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.att_layout);
         if (info.isAbsence()) {
             dateView.setText(Utility.stampToDate(info.getDate(), "yyyy-MM-dd") + "    缺勤");
             layout.setBackgroundColor(Color.RED);

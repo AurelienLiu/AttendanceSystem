@@ -69,6 +69,34 @@ public class Utility {
             for (AttendanceInfo info : infoList) {
                 info.save();
             }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 将获取的人员信息入库
+     * @param response
+     * @return
+     */
+    public static boolean handlePeopleInfo(String response) {
+        if (!TextUtils.isEmpty(response)) {
+            Gson gson = new Gson();
+            List<People> peopleList = gson.fromJson(response, new TypeToken<List<People>>(){}.getType());
+            for (People people : peopleList) {
+                if (people.getStatus() == 0) {
+                    people.setStatus(9);
+                    people.save();
+                } else if (people.getStatus() == 1) {
+                    people.setStatus(9);
+                    people.update(people.getId());
+                } else if (people.getStatus() == -1) {
+                    DataSupport.delete(People.class, people.getId());
+                } else {
+                    Log.e("将获取人员信息入库时：", "姓名:" + people.getName() + "id:" + people.getId() + "status:" + people.getStatus() );
+                }
+            }
+            return true;
         }
         return false;
     }

@@ -145,12 +145,18 @@
                 android:layout_alignBottom="@id/desciption"
                 android:layout_marginLeft="200dp"
                 android:textSize="18dp"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <!--<android.support.v7.widget.RecyclerView-->
+                <!--android:id="@+id/recycler_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="600dp"-->
+                <!--android:layout_marginTop="720dp"-->
+                 <!--/>-->
+
+            <com.example.liuxuanchi.project.peopleManagement.MyListView
+                android:id="@+id/attendance_list"
+                android:layout_below="@id/arriveTime"
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
-                android:layout_marginTop="720dp"
-                 />
+                android:layout_height="wrap_content"/>
 
 
 

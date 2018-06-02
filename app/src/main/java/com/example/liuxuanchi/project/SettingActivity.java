@@ -108,6 +108,42 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
+        //人员信息下载及入库
+        Button updatePeopleInfo = (Button)findViewById(R.id.update_people_info);
+        updateAttendanceInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = "http://10.0.2.2/fahuichu";
+                HttpUtil.sendOkHttpRequest(address, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SettingActivity.this,
+                                        "更新签到信息失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseText = response.body().string();
+                        boolean result = Utility.handlePeopleInfo(responseText);
+                        if (result) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(SettingActivity.this,
+                                            "更新签到信息成功", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
         //人员信息更改上传
         Button postPeopleInfo = (Button)findViewById(R.id.post_people_info);
         postPeopleInfo.setOnClickListener(new View.OnClickListener() {

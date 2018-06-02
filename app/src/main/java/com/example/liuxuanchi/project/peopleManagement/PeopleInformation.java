@@ -85,7 +85,7 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24px);
+            actionBar.setHomeAsUpIndicator(R.drawable.back_24px);
         }
 
         //设置navigationView的点击事件
@@ -278,7 +278,7 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                finish();
                 break;
             default:
                 break;
@@ -291,6 +291,7 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.week_range:
+                showProgressDialog();
                 long oneWeek = 7 * 24 * 60 * 60 * 1000;  //一周的毫秒数
                 timeRange.setText("本周");
                 infoList.clear();
@@ -314,8 +315,10 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
                 }
                 absenceTime.setText(absence1 + "");
                 lateTime.setText(lateOrEarly1 + "");
+                closeProgressDialog();
                 break;
             case R.id.month_range:
+                showProgressDialog();
                 long oneMonth = (long)30 * 24 * 60 * 60 * 1000;  //一周的毫秒数
                 timeRange.setText("本月");
                 infoList.clear();
@@ -340,8 +343,10 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
                 }
                 absenceTime.setText(absence2 + "");
                 lateTime.setText(lateOrEarly2 + "");
+                closeProgressDialog();
                 break;
             case R.id.all_range:
+                showProgressDialog();
                 timeRange.setText("总");
                 infoList.clear();
                 infoList.addAll(DataSupport.where("peopleId=?", "" + id)
@@ -363,6 +368,7 @@ public class PeopleInformation extends BaseActivity implements View.OnClickListe
                 }
                 absenceTime.setText(absence3 + "");
                 lateTime.setText(lateOrEarly3 + "");
+                closeProgressDialog();
                 break;
             default:
                 break;
