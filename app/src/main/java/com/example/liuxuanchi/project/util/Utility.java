@@ -47,7 +47,6 @@ public class Utility {
     public static boolean handleAttendacneInfo(String response) {
         if (!TextUtils.isEmpty(response)) {
 //            try {
-//                Log.d("111", "" + response);
 //                JSONArray infoList = new JSONArray(response);
 //                for (int i = 0; i < infoList.length(); i++) {
 //                    JSONObject infoObject = infoList.getJSONObject(i);
@@ -65,7 +64,6 @@ public class Utility {
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
-
             Gson gson = new Gson();
             List<AttendanceInfo> infoList = gson.fromJson(response, new TypeToken<List<AttendanceInfo>>(){}.getType());
             for (AttendanceInfo info : infoList) {
@@ -98,7 +96,6 @@ public class Utility {
     }
     public static String stampToDate(long s){
         String res;
-        long hour = 60 * 60 * 1000;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(s);
         res = simpleDateFormat.format(date);
@@ -106,7 +103,6 @@ public class Utility {
     }
     public static String stampToDate(long s, String format){
         String res;
-        long hour = 60 * 60 * 1000;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         Date date = new Date(s);
         res = simpleDateFormat.format(date);
@@ -199,7 +195,8 @@ public class Utility {
         }
     }
 
-    public static void showDatePickerDialog(final Activity activity, int themeResId, final PieChart pieChart, Calendar calendar) {
+    public static void showDatePickerDialog(final Activity activity, int themeResId,
+                                            final PieChart pieChart, Calendar calendar) {
         // Calendar c = Calendar.getInstance();
         // 创建一个TimePickerDialog实例，并把它显示出来
         // 解释一哈，Activity是context的子类
@@ -218,7 +215,8 @@ public class Utility {
                 , calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    public static void showTimePickerDialog(final Activity activity, int themeResId, final TextView tv, Calendar calendar) {
+    public static void showTimePickerDialog(final Activity activity, int themeResId,
+                                            final TextView tv, Calendar calendar) {
         // Calendar c = Calendar.getInstance();
         // 创建一个TimePickerDialog实例，并把它显示出来
         // 解释一哈，Activity是context的子类
@@ -228,7 +226,8 @@ public class Utility {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         tv.setText( hourOfDay + "时" + minute  + "分");
-                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(activity).edit();
+                        SharedPreferences.Editor editor =
+                                PreferenceManager.getDefaultSharedPreferences(activity).edit();
                         if (tv.getId() == R.id.time1) {
                             editor.putInt("hour1", hourOfDay);
                             editor.putInt("minute1", minute);

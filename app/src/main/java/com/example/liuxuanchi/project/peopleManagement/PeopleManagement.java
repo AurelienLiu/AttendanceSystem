@@ -132,10 +132,11 @@ public class PeopleManagement extends BaseActivity {
                 String queryText = searchView.getQuery().toString();
                 //若为空则显示所有人，若不为空则查找搜索包含这一字符串的姓名的人员 
                 if ("".equals(queryText)) {
-                    myList = DataSupport.findAll(People.class);
+                    myList = DataSupport.where("status>?", "-1").find(People.class);
                 } else {
                     myList.clear();
-                    myList = DataSupport.where("name like ?", "%" + queryText + "%").where("status>?", "-1").find(People.class);
+                    myList = DataSupport.where("name like ? AND status>?",
+                            "%" + queryText + "%", "-1").find(People.class);
                 }
                 //查找结束后将新的人员列表显示在列表中
                 adapter = new PeopleAdapter(myList);

@@ -84,7 +84,8 @@ public class SettingActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SettingActivity.this, "更新签到信息失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SettingActivity.this,
+                                        "更新签到信息失败", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -97,7 +98,8 @@ public class SettingActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(SettingActivity.this, "更新签到信息成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SettingActivity.this,
+                                            "更新签到信息成功", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -127,7 +129,8 @@ public class SettingActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SettingActivity.this, "人员信息更新上传失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SettingActivity.this,
+                                        "人员信息更新上传失败", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -137,7 +140,8 @@ public class SettingActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SettingActivity.this, "人员信息更新上传成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SettingActivity.this,
+                                        "人员信息更新上传成功", Toast.LENGTH_SHORT).show();
                             }
                         });
                         //在本地库中删除status为-1的人员
