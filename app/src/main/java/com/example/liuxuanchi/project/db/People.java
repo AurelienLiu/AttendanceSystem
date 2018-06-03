@@ -15,7 +15,6 @@ public class People extends DataSupport{
     private int id;
 //    private int department;
     private String department;
-    private int level;
     private String position;
     private String phoneNumber;
     private byte[] headshot;
@@ -72,14 +71,6 @@ public class People extends DataSupport{
 
     public void setDepartment(String department) {
         this.department = department;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public String getPosition() {

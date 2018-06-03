@@ -1,6 +1,5 @@
 package com.example.liuxuanchi.project.statistics.statistics;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -8,28 +7,18 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
-import com.example.liuxuanchi.project.SettingActivity;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
-import com.example.liuxuanchi.project.db.ReachedInfoLitepal;
-import com.example.liuxuanchi.project.login.LoginActivity;
 import com.example.liuxuanchi.project.peopleManagement.AttendanceInfoAdapter;
 import com.example.liuxuanchi.project.peopleManagement.MyListView;
-import com.example.liuxuanchi.project.peopleManagement.PeopleInformation;
-import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
 import com.example.liuxuanchi.project.util.Utility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -45,10 +34,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.litepal.crud.DataSupport;
@@ -109,9 +95,16 @@ public class StatisticsActivity extends BaseActivity {
 
         //设置y轴
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        for (int i = 1;i < 17; i++){
-            float j = (int)((Math.random())*60);
-            barEntries.add(new BarEntry(i,j));
+        //在此处添加柱状图的数据
+//        for (int i = 1;i < 17; i++){
+//            float j = (int)((Math.random())*60);
+//            barEntries.add(new BarEntry(i,j));
+//        }
+        barEntries.add(new BarEntry(1, 34));
+        barEntries.add(new BarEntry(2, 46));
+        barEntries.add(new BarEntry(3, 10));
+        for (int i = 4; i<17; i++){
+            barEntries.add(new BarEntry(i, 0));
         }
 
 
@@ -139,8 +132,8 @@ public class StatisticsActivity extends BaseActivity {
         mBarChart.setData(barData);
 
         //设置x轴
-        String[] times = new String[]{"8:00","8:15","8:30", "8:45", "9:00","9:15", "9:30", "9:45",
-                "10:00","13:30","13:45","14:00","14:15","14:30","14:45","15:00","24:00"};
+        String[] times = new String[]{"8:00", "8:30", "8:45", "9:00","9:15", "16:00", "16:30", "17:00",
+                "17:30", "17:45", "18:00", "24:00"};
         XAxis xAxis = mBarChart.getXAxis();
         xAxis.setValueFormatter(new MyXAxisValueFormatter(times));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

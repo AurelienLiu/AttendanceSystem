@@ -78,14 +78,18 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String address = "http://10.0.2.2/fahuichu";
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("timeStamp", "" + Utility.getAttendanceInfoLastUpdateTime())
+                        .build();
+                Log.d("22222222", "onClick: ");
                 HttpUtil.sendOkHttpRequest(address, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SettingActivity.this,
-                                        "更新签到信息失败", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(SettingActivity.this,
+//                                        "更新签到信息失败", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -104,13 +108,13 @@ public class SettingActivity extends BaseActivity {
                             });
                         }
                     }
-                });
+                }, requestBody);
             }
         });
 
         //人员信息下载及入库
         Button updatePeopleInfo = (Button)findViewById(R.id.update_people_info);
-        updateAttendanceInfo.setOnClickListener(new View.OnClickListener() {
+        updatePeopleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String address = "http://10.0.2.2/fahuichu";
@@ -149,11 +153,14 @@ public class SettingActivity extends BaseActivity {
         postPeopleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String address = "http://10.0.2.2/fahuichu";
+//                String address = "http://10.0.2.2/fahuichu";
+                String address = "http://172.20.10.3:8080/HelloWorld/HelloForm";
                 String json = "";//返回的json字符串
                 List<People> peopleList = DataSupport.where("status < ?", "9").find(People.class);
+                People people = DataSupport.findLast(People.class);
                 try {
-                    json = Utility.peopleListToJsonString(peopleList);
+//                    json = Utility.peopleListToJsonString(peopleList);
+                    json = Utility.peopleListToJsonString(people);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -172,21 +179,22 @@ public class SettingActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(Call call, final Response response) throws IOException {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(SettingActivity.this,
-                                        "人员信息更新上传成功", Toast.LENGTH_SHORT).show();
+                                        "人员信息更新上传成功" + response.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("111111111", "run: " + response.toString());
                             }
                         });
-                        //在本地库中删除status为-1的人员
-                        DataSupport.deleteAll(People.class, "status < ", "0");
-                        //将剩余所以人员的更新时间戳设为现在的时间，状态戳设为9（已同步）
-                        People people = new People();
-                        people.setTimeStamp(System.currentTimeMillis());
-                        people.setStatus(9);
-                        people.updateAll("status < ?", "9");
+//                        //在本地库中删除status为-1的人员
+//                        DataSupport.deleteAll(People.class, "status < ", "0");
+//                        //将剩余所以人员的更新时间戳设为现在的时间，状态戳设为9（已同步）
+//                        People people = new People();
+//                        people.setTimeStamp(System.currentTimeMillis());
+//                        people.setStatus(9);
+//                        people.updateAll("status < ?", "9");
 
 
                     }
@@ -214,7 +222,6 @@ public class SettingActivity extends BaseActivity {
                         AttendanceInfo info = new AttendanceInfo(1, "冯涛", (long)time - oneDay * i, false, time);
                         info.save();
                     }
-//                    Log.d("111111111", "" + (oneDay * i));
                 }
                 for (int i = 0; i < 40; i++) {
                     if (i % 6 == 0) {
@@ -262,14 +269,14 @@ public class SettingActivity extends BaseActivity {
         }
 
         //测试用
-//        Button test = (Button)findViewById(R.id.test);
-//        test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int i = Utility.isLateOrGoEarly(System.currentTimeMillis());
-//                Toast.makeText(SettingActivity.this, i + "小时", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        Button test = (Button)findViewById(R.id.test);
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long i = Utility.getAttendanceInfoLastUpdateTime();
+                Toast.makeText(SettingActivity.this, i + "", Toast.LENGTH_SHORT).show();
+            }
+        });
 //
 
     }
