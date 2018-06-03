@@ -6,8 +6,11 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,8 +109,13 @@ public class Utility {
      * 获取考勤信息最新时间戳
      */
     public static long getAttendanceInfoLastUpdateTime() {
-        Cursor cursor = DataSupport.findBySQL("select max(timestamp) from attendanceinfo");
-        return cursor.getLong(cursor.getColumnIndex("timestamp"));
+         List<AttendanceInfo> infolist = DataSupport
+                 .order("timeStamp asc")
+                 .find(AttendanceInfo.class);
+         AttendanceInfo info = infolist.get(0);
+         return info.getTimeStamp();
+//        Cursor cursor = DataSupport.findBySQL("select max(timestamp) from attendanceinfo");
+//        return cursor.getLong(cursor.getColumnIndex("timestamp"));
     }
 
     /**
@@ -166,13 +175,43 @@ public class Utility {
             jsonObject.put("departement", people.getDepartment());
             jsonObject.put("position", people.getPosition());
             jsonObject.put("phone_number", people.getPhoneNumber());
-            jsonObject.put("headshot", people.getHeadshot());
+            Bitmap picture = BitmapFactory.decodeByteArray(people.getHeadshot(), 0, people.getHeadshot().length);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] datas = baos.toByteArray();
+            String pic = Base64.encodeToString(datas, Base64.DEFAULT);
+            jsonObject.put("picture", pic);
             jsonObject.put("job_number", people.getJobNumber());
             jsonArray.put(jsonObject);
         }
+
 //        Gson gson = new Gson();
 //        String jsonString = gson.toJson(peopleList);
         return jsonArray.toString();
+    }
+
+    public static String peopleListToJsonString(People people) throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", people.getId());
+        jsonObject.put("name", people.getName());
+        jsonObject.put("departement", people.getDepartment());
+        jsonObject.put("position", people.getPosition());
+        jsonObject.put("phone_number", people.getPhoneNumber());
+        Bitmap picture = BitmapFactory.decodeByteArray(people.getHeadshot(), 0, people.getHeadshot().length);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] datas = baos.toByteArray();
+        String pic = Base64.encodeToString(datas, Base64.DEFAULT);
+        jsonObject.put("picture", pic);
+        jsonObject.put("job_number", people.getJobNumber());
+        jsonArray.put(jsonObject);
+
+
+//        Gson gson = new Gson();
+//        String jsonString = gson.toJson(peopleList);
+        return jsonObject.toString();
     }
 
 
