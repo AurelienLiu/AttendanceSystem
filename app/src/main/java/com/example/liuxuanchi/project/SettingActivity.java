@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
 import com.example.liuxuanchi.project.db.People;
 import com.example.liuxuanchi.project.peopleManagement.PeopleManagement;
+import com.example.liuxuanchi.project.statistics.statistics.StatisticsActivity;
 import com.example.liuxuanchi.project.util.HttpUtil;
 import com.example.liuxuanchi.project.util.Utility;
 
@@ -34,6 +36,7 @@ import org.litepal.crud.DataSupport;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -117,7 +120,7 @@ public class SettingActivity extends BaseActivity {
         updatePeopleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String address = "http://10.0.2.2/fahuichu";
+                String address = "http://10.0.2.2/fahuichu.json";
                 HttpUtil.sendOkHttpRequest(address, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -132,7 +135,7 @@ public class SettingActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        String responseText = response.body().string();
+                        final String responseText = response.body().string();
                         boolean result = Utility.handlePeopleInfo(responseText);
                         if (result) {
                             runOnUiThread(new Runnable() {
@@ -140,6 +143,7 @@ public class SettingActivity extends BaseActivity {
                                 public void run() {
                                     Toast.makeText(SettingActivity.this,
                                             "更新签到信息成功", Toast.LENGTH_SHORT).show();
+                                    Log.d("2222222222", "run: " + responseText);
                                 }
                             });
                         }
@@ -154,7 +158,8 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 //                String address = "http://10.0.2.2/fahuichu";
-                String address = "http://172.20.10.3:8080/HelloWorld/HelloForm";
+//                String address = "http://172.20.10.3:8080/HelloWorld/HelloForm";
+                String address = "http://47.95.228.175:8080/DBApi/addPhotoByByte";
                 String json = "";//返回的json字符串
                 List<People> peopleList = DataSupport.where("status < ?", "9").find(People.class);
                 People people = DataSupport.findLast(People.class);
@@ -211,27 +216,41 @@ public class SettingActivity extends BaseActivity {
                 DataSupport.deleteAll(AttendanceInfo.class);
 //                long time = SystemClock.elapsedRealtime();
                 long hour = 60 * 60 * 1000;
-                long time = System.currentTimeMillis() - 6 * hour;
-                long time2 = time + 32400000;
+                long minute = 60 * 1000;
+                long time = System.currentTimeMillis() + (9 - StatisticsActivity.getHourOfToday()) * hour;
+                long time2 = time + 8 * hour;
                 long oneDay = 24 * 60 * 60 * 1000;
-                for (int i = 0; i < 40; i++) {
-                    if (i % 7 == 0) {
-                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", (long)time - oneDay * i, true, time);
-                        info.save();
-                    } else {
-                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", (long)time - oneDay * i, false, time);
-                        info.save();
+                Random random = new Random();
+                List<People> list = DataSupport.where("status>?", "-1").find(People.class);
+                for (People people : list) {
+                    for (int i = 0; i < 120; i++) {
+                        if (random.nextInt(12)  == 1) {
+                            int n = random.nextInt(200);
+                            AttendanceInfo info = new AttendanceInfo(people.getId(), "" + people.getName(),
+                                    (long)time - oneDay * i + (n - 50) * minute, true, System.currentTimeMillis());
+                            info.save();
+                        } else {
+                            int n = random.nextInt(200);
+                            AttendanceInfo info = new AttendanceInfo(people.getId(), "" + people.getName(),
+                                    (long)time - oneDay * i - (n - 50) * minute, false, System.currentTimeMillis());;
+                            info.save();
+                        }
+                    }
+                    for (int i = 0; i < 120; i++) {
+                        if (random.nextInt(12)  == 1) {
+                            int n = random.nextInt(200);
+                            AttendanceInfo info = new AttendanceInfo(people.getId(), "" + people.getName(),
+                                    (long)time2 - oneDay * i + (n - 50) * minute, true, System.currentTimeMillis());
+                            info.save();
+                        } else {
+                            int n = random.nextInt(200);
+                            AttendanceInfo info = new AttendanceInfo(people.getId(), "" + people.getName(),
+                                    (long)time2 - oneDay * i + (n - 50) * minute, false, System.currentTimeMillis());
+                            info.save();
+                        }
                     }
                 }
-                for (int i = 0; i < 40; i++) {
-                    if (i % 6 == 0) {
-                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", time2 - oneDay * i, true, time);
-                        info.save();
-                    } else {
-                        AttendanceInfo info = new AttendanceInfo(1, "冯涛", time2 - oneDay * i, false, time);
-                        info.save();
-                    }
-                }
+
             }
         });
 

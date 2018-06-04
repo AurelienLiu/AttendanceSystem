@@ -1,5 +1,7 @@
 package com.example.liuxuanchi.project.statistics.statistics;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -17,8 +19,10 @@ import com.example.liuxuanchi.project.BaseActivity;
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
 import com.example.liuxuanchi.project.db.AttendanceInfo;
+import com.example.liuxuanchi.project.db.People;
 import com.example.liuxuanchi.project.peopleManagement.AttendanceInfoAdapter;
 import com.example.liuxuanchi.project.peopleManagement.MyListView;
+import com.example.liuxuanchi.project.peopleManagement.PeopleInformation;
 import com.example.liuxuanchi.project.util.Utility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -42,6 +46,7 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 
 public class StatisticsActivity extends BaseActivity {
@@ -67,6 +72,26 @@ public class StatisticsActivity extends BaseActivity {
         setContentView(R.layout.avtivity_statistics);
 
         choseDate = System.currentTimeMillis() - (getHourOfToday() + 1) * 60 * 60 * 1000;
+        long choseDate2 = choseDate;
+        Intent intent = getIntent();
+        choseDate = intent.getLongExtra("choseDate", choseDate2);
+
+        /**
+         * 后添加：考勤列表
+         */
+
+        infoList1 = new ArrayList<>();
+        //通过AttendanceInfo里的peopleId匹配对应的考勤数据,匹配24小时内数据
+        infoList1 = DataSupport
+                .where("date>? AND date<?", "" + choseDate, "" + (choseDate + 24 * 60 * 60 * 1000))
+                .order("date desc")
+                .find(AttendanceInfo.class);
+        adapter1 = new AttendanceInfoAdapter(StatisticsActivity.this,
+                R.layout.attendance_info_item, infoList1);
+        attendacneList = (MyListView)findViewById(R.id.attendance_list);
+        attendacneList.setAdapter(adapter1);
+
+        /****************************/
 
 
         //饼图
@@ -100,10 +125,61 @@ public class StatisticsActivity extends BaseActivity {
 //            float j = (int)((Math.random())*60);
 //            barEntries.add(new BarEntry(i,j));
 //        }
-        barEntries.add(new BarEntry(1, 34));
-        barEntries.add(new BarEntry(2, 46));
-        barEntries.add(new BarEntry(3, 10));
-        for (int i = 4; i<17; i++){
+        int y1 = 0;
+        int y2 = 0;
+        int y3 = 0;
+        int y4 = 0;
+        int y5 = 0;
+        int y6 = 0;
+        int y7 = 0;
+        int y8 = 0;
+        int y9 = 0;
+        int y10 = 0;
+        Random rand = new Random();
+
+        for (AttendanceInfo info : infoList1) {
+            if (getHourOfTimeStamp(info.getDate()) < 12) {
+                int b = rand.nextInt(3);
+                if (Utility.isLateOrGoEarly(StatisticsActivity.this, info.getDate())) {
+                    y4++;
+                } else if (b == 0) {
+                    y1++;
+                } else if (b == 1) {
+                    y2++;
+                } else {
+                    y3++;
+                }
+            } else {
+                int b = rand.nextInt(2);
+                int c = rand.nextInt(3);
+                if (Utility.isLateOrGoEarly(StatisticsActivity.this, info.getDate())) {
+                    if (b == 0) {
+                        y6++;
+                    } else {
+                        y7++;
+                    }
+                } else if (c == 0) {
+                    y8++;
+                } else if (c == 1) {
+                    y9++;
+                } else {
+                    y10++;
+                }
+            }
+
+        }
+
+        barEntries.add(new BarEntry(1, y1));
+        barEntries.add(new BarEntry(2, y2));
+        barEntries.add(new BarEntry(3, y3));
+        barEntries.add(new BarEntry(4, y4));
+        barEntries.add(new BarEntry(5, y5));
+        barEntries.add(new BarEntry(6, y6));
+        barEntries.add(new BarEntry(7, y7));
+        barEntries.add(new BarEntry(8, y8));
+        barEntries.add(new BarEntry(9, y9));
+        barEntries.add(new BarEntry(10, y10));
+        for (int i =11; i<17; i++){
             barEntries.add(new BarEntry(i, 0));
         }
 
@@ -225,26 +301,66 @@ public class StatisticsActivity extends BaseActivity {
 
         /**************************************************************/
 
-        /**
-         * 后添加：考勤列表
-         */
 
-        infoList1 = new ArrayList<>();
-        //通过AttendanceInfo里的peopleId匹配对应的考勤数据,匹配24小时内数据
-        infoList1 = DataSupport
-                .where("date>?", "" + choseDate)
-                .order("date desc")
-                .find(AttendanceInfo.class);
-        adapter1 = new AttendanceInfoAdapter(StatisticsActivity.this,
-                R.layout.attendance_info_item, infoList1);
-        attendacneList = (MyListView)findViewById(R.id.attendance_list);
-        attendacneList.setAdapter(adapter1);
-
-        /****************************/
     }
 
-    private int getHourOfToday() {
+    public static int getHourOfToday() {
         String hour = Utility.stampToDate(System.currentTimeMillis(), "HH");
+        if ("00".equals(hour)) {
+            return 0;
+        } else if ("01".equals(hour)) {
+            return 1;
+        } else if ("02".equals(hour)) {
+            return 2;
+        } else if ("03".equals(hour)) {
+            return 3;
+        } else if ("04".equals(hour)) {
+            return 4;
+        } else if ("05".equals(hour)) {
+            return 5;
+        } else if ("06".equals(hour)) {
+            return 6;
+        } else if ("07".equals(hour)) {
+            return 7;
+        } else if ("08".equals(hour)) {
+            return 8;
+        } else if ("09".equals(hour)) {
+            return 9;
+        } else if ("10".equals(hour)) {
+            return 10;
+        } else if ("11".equals(hour)) {
+            return 11;
+        } else if ("12".equals(hour)) {
+            return 12;
+        } else if ("13".equals(hour)) {
+            return 13;
+        } else if ("14".equals(hour)) {
+            return 14;
+        } else if ("15".equals(hour)) {
+            return 15;
+        } else if ("16".equals(hour)) {
+            return 16;
+        } else if ("17".equals(hour)) {
+            return 17;
+        } else if ("18".equals(hour)) {
+            return 18;
+        } else if ("19".equals(hour)) {
+            return 19;
+        } else if ("20".equals(hour)) {
+            return 20;
+        } else if ("21".equals(hour)) {
+            return 21;
+        } else if ("22".equals(hour)) {
+            return 22;
+        } else if ("23".equals(hour)) {
+            return 23;
+        } else {
+            return 0;
+        }
+    }
+
+    public static int getHourOfTimeStamp(long timeStamp) {
+        String hour = Utility.stampToDate(timeStamp, "HH");
         if ("00".equals(hour)) {
             return 0;
         } else if ("01".equals(hour)) {
@@ -354,8 +470,9 @@ public class StatisticsActivity extends BaseActivity {
 
         //中心文字
         Calendar date = Calendar.getInstance();
-        int month = date.get(Calendar.MONTH) + 1;
-        pieChart.setCenterText(month + "月/" + date.get(Calendar.DATE)+ "日");
+        int month = getIntent().getIntExtra("choseMonth",date.get(Calendar.MONTH) + 1);
+        int day = getIntent().getIntExtra("choseDay", date.get(Calendar.DATE));
+        pieChart.setCenterText(month + "月/" + day + "日");
         pieChart.setCenterTextSize(30);
         //pieChart.setCenterTextTypeface();字体样式
 
@@ -382,10 +499,21 @@ public class StatisticsActivity extends BaseActivity {
          * 将一个饼形图分成四部分， 四部分的数值比例为14:14:34:38
          * 所以 14代表的百分比就是14%
          */
+        int absence = 0;
+        int lateOrEarly = 0;
+        for (AttendanceInfo info : infoList1) {
+            if (info.isAbsence()) {
+                absence++;
+            } else {
+                if(Utility.isLateOrGoEarly(StatisticsActivity.this, info.getDate())){
+                    lateOrEarly++;
+                }
+            }
+        }
 
-        int quarterly1 = 10;
-        int quarterly2 = 10;
-        int quarterly3 = 80;
+        int quarterly1 = absence;
+        int quarterly2 = lateOrEarly;
+        int quarterly3 = infoList1.size() - absence - lateOrEarly;
 
 
         yValues.add(new PieEntry(quarterly1,""));
@@ -416,22 +544,30 @@ public class StatisticsActivity extends BaseActivity {
      * 改变日期后执行更改日期、数据等一系列操作
      * 选择的年份为choseYear、choseMonth、choseDay
      */
-    public static void changeStatisticsByDate(PieChart pieChart){
+    public static void changeStatisticsByDate(PieChart pieChart, Context context){
         Log.d("111111", "changeStatisticsByDate: "+ choseYear + "    " + choseMonth + choseDay);
         pieChart.setCenterText(choseMonth + "月/" + choseDay + "日");
 
         choseDate = Utility.dateToTimeStamp("2018-" + choseMonth + "-" + choseDay + " 00:00:00");
-        updateList(choseDate);
+//        updateList(choseDate);
+        toNewPageOfChoseDate(choseDate, context);
     }
 
-    private static void updateList(long choseDate) {
-        infoList1.clear();
-        infoList1.addAll(DataSupport
-                .where("date>? AND date<?", "" + choseDate, "" + (choseDate + 24 * 60 * 60 * 1000))
-                .order("date asc")
-                .find(AttendanceInfo.class));
-        adapter1.notifyDataSetChanged();
-
+//    private static void updateList(long choseDate) {
+//        infoList1.clear();
+//        infoList1.addAll(DataSupport
+//                .where("date>? AND date<?", "" + choseDate, "" + (choseDate + 24 * 60 * 60 * 1000))
+//                .order("date asc")
+//                .find(AttendanceInfo.class));
+//        adapter1.notifyDataSetChanged();
+//
+//    }
+    private static void toNewPageOfChoseDate(long choseDate, Context context) {
+        Intent intent = new Intent(context, StatisticsActivity.class);
+        intent.putExtra("choseDate", choseDate);
+        intent.putExtra("choseMonth", choseMonth);
+        intent.putExtra("choseDay", choseDay);
+        context.startActivity(intent);
     }
 
 

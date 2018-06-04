@@ -175,13 +175,14 @@ public class Utility {
             jsonObject.put("departement", people.getDepartment());
             jsonObject.put("position", people.getPosition());
             jsonObject.put("phone_number", people.getPhoneNumber());
+            jsonObject.put("job_number", people.getJobNumber());
             Bitmap picture = BitmapFactory.decodeByteArray(people.getHeadshot(), 0, people.getHeadshot().length);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] datas = baos.toByteArray();
             String pic = Base64.encodeToString(datas, Base64.DEFAULT);
             jsonObject.put("picture", pic);
-            jsonObject.put("job_number", people.getJobNumber());
+
             jsonArray.put(jsonObject);
         }
 
@@ -199,6 +200,7 @@ public class Utility {
         jsonObject.put("departement", people.getDepartment());
         jsonObject.put("position", people.getPosition());
         jsonObject.put("phone_number", people.getPhoneNumber());
+        jsonObject.put("job_number", people.getJobNumber());
         Bitmap picture = BitmapFactory.decodeByteArray(people.getHeadshot(), 0, people.getHeadshot().length);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -266,7 +268,7 @@ public class Utility {
                                             final PieChart pieChart, Calendar calendar) {
         // Calendar c = Calendar.getInstance();
         // 创建一个TimePickerDialog实例，并把它显示出来
-        // 解释一哈，Activity是context的子类
+        // 解释，Activity是context的子类
         new DatePickerDialog(activity, themeResId,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -274,7 +276,7 @@ public class Utility {
                         StatisticsActivity.choseYear = year;
                         StatisticsActivity.choseMonth = month + 1;//月份是从0-11
                         StatisticsActivity.choseDay = dayOfMonth;
-                        StatisticsActivity.changeStatisticsByDate(pieChart);
+                        StatisticsActivity.changeStatisticsByDate(pieChart, activity);
                     }
                 }
                 , calendar.get(Calendar.YEAR)
