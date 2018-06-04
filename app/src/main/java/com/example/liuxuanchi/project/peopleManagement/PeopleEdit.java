@@ -1,6 +1,7 @@
 package com.example.liuxuanchi.project.peopleManagement;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,10 +34,24 @@ import android.widget.Toast;
 
 import com.example.liuxuanchi.project.MyNavigationView;
 import com.example.liuxuanchi.project.R;
+import com.example.liuxuanchi.project.SettingActivity;
 import com.example.liuxuanchi.project.db.People;
+import com.example.liuxuanchi.project.util.HttpUtil;
+import com.example.liuxuanchi.project.util.Utility;
 import com.soundcloud.android.crop.Crop;
 
+import org.json.JSONException;
+import org.litepal.crud.DataSupport;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PeopleEdit extends AppCompatActivity {
 
@@ -49,6 +65,7 @@ public class PeopleEdit extends AppCompatActivity {
     private ImageView photo;
     private Bitmap bitmap;
     private DrawerLayout mDrawerLayout;
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,12 +214,14 @@ public class PeopleEdit extends AppCompatActivity {
                     people.setStatus(0);
                     people.save();
                     Toast.makeText(PeopleEdit.this, "添加成功", Toast.LENGTH_SHORT).show();
+                    addPeopleInServer(people);
                 } else {
                     int id = intent.getIntExtra("data_id", -1);
                     people.setStatus(1);
                     people.update(id);
                     if (id > -1){
                         Toast.makeText(PeopleEdit.this, "修改成功", Toast.LENGTH_SHORT).show();
+                        editPeopleInServer(people);
                     } else {
                         Toast.makeText(PeopleEdit.this, "修改失败", Toast.LENGTH_SHORT).show();
                     }
@@ -283,6 +302,102 @@ public class PeopleEdit extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    public void addPeopleInServer(People people) {
+
+//                String address = "http://10.0.2.2/fahuichu";
+//                String address = "http://172.20.10.3:8080/HelloWorld/HelloForm";
+        String address = "http://47.95.228.175:8080/DBApi/addPhotoByByte";
+        String json = "";//返回的json字符串
+        try {
+            json = Utility.peopleListToJsonString(people);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(JSON, json);
+        Log.d("1111", "onClick: "+ json);
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PeopleEdit.this,
+                                "人员信息更新上传失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PeopleEdit.this,
+                                "人员信息更新上传成功", Toast.LENGTH_SHORT).show();
+                        Log.d("111111111", "run: " + response.toString());
+                    }
+                });
+//                        //在本地库中删除status为-1的人员
+//                        DataSupport.deleteAll(People.class, "status < ", "0");
+//                        //将剩余所以人员的更新时间戳设为现在的时间，状态戳设为9（已同步）
+//                        People people = new People();
+//                        people.setTimeStamp(System.currentTimeMillis());
+//                        people.setStatus(9);
+//                        people.updateAll("status < ?", "9");
+
+
+            }
+        }, requestBody);
+    }
+
+    public void editPeopleInServer(People people) {
+
+//                String address = "http://10.0.2.2/fahuichu";
+//                String address = "http://172.20.10.3:8080/HelloWorld/HelloForm";
+        String address = "http://47.95.228.175:8080/DBApi/addPhotoByByte";
+        String json = "";//返回的json字符串
+        try {
+            json = Utility.peopleListToJsonString(people);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(JSON, json);
+        Log.d("1111", "onClick: "+ json);
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PeopleEdit.this,
+                                "人员信息更新上传失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PeopleEdit.this,
+                                "人员信息更新上传成功", Toast.LENGTH_SHORT).show();
+                        Log.d("111111111", "run: " + response.toString());
+                    }
+                });
+//                        //在本地库中删除status为-1的人员
+//                        DataSupport.deleteAll(People.class, "status < ", "0");
+//                        //将剩余所以人员的更新时间戳设为现在的时间，状态戳设为9（已同步）
+//                        People people = new People();
+//                        people.setTimeStamp(System.currentTimeMillis());
+//                        people.setStatus(9);
+//                        people.updateAll("status < ?", "9");
+
+
+            }
+        }, requestBody);
     }
 
 
